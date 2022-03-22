@@ -1,9 +1,9 @@
-﻿
+
 <#PSScriptInfo
 
 .VERSION 0.1.0
 
-.GUID 41aa308f-60e2-499b-aa12-a92e73f4a1c1
+.GUID 1e155ada-a5ed-44a5-bec5-54c070479a4d
 
 .AUTHOR Pierre Smit
 
@@ -11,7 +11,7 @@
 
 .COPYRIGHT
 
-.TAGS ps
+.TAGS windows
 
 .LICENSEURI
 
@@ -19,43 +19,51 @@
 
 .ICONURI
 
-.EXTERNALMODULEDEPENDENCIES
+.EXTERNALMODULEDEPENDENCIES 
 
 .REQUIREDSCRIPTS
 
 .EXTERNALSCRIPTDEPENDENCIES
 
 .RELEASENOTES
-Created [24/10/2021_05:59] Initial Script Creating
+Created [22/03/2022_11:57] Initial Script Creating
 
 .PRIVATEDATA
 
 #>
 
-<#
 
-.DESCRIPTION
- Gui menu app in your systray with custom executable functions
+<# 
 
-#>
+.DESCRIPTION 
+ This function reads csv config file and creates the gui in your system tray. 
+
+#> 
+
 
 <#
 .SYNOPSIS
-This function launches the System Tray GUI.
+This function reads csv config file and creates the gui in your system tray.
 
 .DESCRIPTION
-This function launches the System Tray GUI.
+This function reads csv config file and creates the gui in your system tray.
 
 .PARAMETER ConfigFilePath
-Path to the csv file created by the New-PSSysTrayConfigFile function.
+Path to the config file created by New-PSSysTrayConfigFile
+
+.PARAMETER Confirm
+Will ask before changes are made.
+
+.PARAMETER WhatIf
+Runs the script without changes.
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv 
 
 #>
 Function Start-PSSysTray {
-    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray/')]
-    Param (
+		[Cmdletbinding(upportsShouldProcess = $true, HelpURI = "https://smitpi.github.io/PSSysTray/Start-PSSysTray")]	    
+		Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
         [string]$ConfigFilePath
@@ -77,8 +85,8 @@ Function Start-PSSysTray {
         [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
 
         # Add an icon to the systray button
-        $module = Get-Module pslauncher
-        if (![bool]$module) { $module = Get-Module pslauncher -ListAvailable }
+        $module = Get-Module PSSysTray
+        if (![bool]$module) { $module = Get-Module PSSysTray -ListAvailable }
 
 
         $icopath = (Join-Path $module.ModuleBase '\Private\PSSysTray.ico') | Get-Item
@@ -126,7 +134,7 @@ Function Start-PSSysTray {
                     $MenuItem.Add_Click( {
                             ShowConsole
                             $MyScriptPath = $This.MyScriptPath #Used to find proper path during click event
-                            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoProfile -NoLogo -ExecutionPolicy Bypass -File `"$MyScriptPath`"" -ErrorAction Stop
+                            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoProfile -NoLogo -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$MyScriptPath`"" -ErrorAction Stop
                             HideConsole
                         })
                 }

@@ -52,12 +52,6 @@ Path to where the config file will be saved.
 .PARAMETER CreateShortcut
 Create a shortcut to a .ps1 file that will launch the gui.
 
-.PARAMETER Confirm
-Will ask before changes are made.
-
-.PARAMETER WhatIf
-Runs the script without changes.
-
 .EXAMPLE
 New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
 

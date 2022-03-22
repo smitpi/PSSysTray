@@ -1,0 +1,16 @@
+
+PSSysTray
+	 about_PSSysTray
+ 
+SHORT DESCRIPTION
+	 Creates a System Tray Menu from a csv file to launch any PowerShell Command or file (or any other executable)
+
+ 
+NOTES
+Functions in this module:
+	 New-PSSysTrayConfigFile -- Creates the config file for Start-PSSysTray
+	 Start-PSSysTray -- Gui menu app in your systray with custom executable functions
+ 
+SEE ALSO
+	 
+	 

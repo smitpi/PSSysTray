@@ -57,7 +57,7 @@ New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
 
 #>
 Function New-PSSysTrayConfigFile {
-    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile/')]
+    [Cmdletbinding([Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile/')]
     PARAM(
         [ValidateScript( { (Test-Path $_) })]
         [System.IO.DirectoryInfo]$ConfigPath,
@@ -85,44 +85,42 @@ Function New-PSSysTrayConfigFile {
         Mode       = 'Other'
     }
 
-    if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
+    $Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
+    $check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
+    if (-not($check)) {
+        Write-Output 'Config File does not exit, creating default settings.'
+        $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
+    } else {
+        Write-Warning 'File exists, renaming file now'
+        Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
+        $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
+    }
 
-        $Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
-        $check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
-        if (-not($check)) {
-            Write-Output 'Config File does not exit, creating default settings.'
-            $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
-        } else {
-            Write-Warning 'File exists, renaming file now'
-            Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
-            $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
-        }
+    if ($CreateShortcut) {
+        $module = Get-Module pslauncher
+        if (![bool]$module) { $module = Get-Module pslauncher -ListAvailable }
 
-        if ($CreateShortcut) {
-            $module = Get-Module pslauncher
-            if (![bool]$module) { $module = Get-Module pslauncher -ListAvailable }
-
-            $string = @"
+        $string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 import-module `$PRModule.fullname -Force
 Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
-            Set-Content -Value $string -Path (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
-            $PSSysTray = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
+        Set-Content -Value $string -Path (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
+        $PSSysTray = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
 
-            $WScriptShell = New-Object -ComObject WScript.Shell
-            $lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')
-            $Shortcut = $WScriptShell.CreateShortcut($($lnkfile))
-            $Shortcut.TargetPath = 'powershell.exe'
-            $Shortcut.Arguments = "-NoLogo -NoProfile -ExecutionPolicy bypass -file `"$($PSSysTray.FullName)`""
-            $icon = Get-Item (Join-Path $module.ModuleBase .\Private\PSSysTray.ico)
-            $Shortcut.IconLocation = $icon.FullName
-            $Shortcut.Save()
-            Start-Process explorer.exe $ConfigPath
-
-
-        }
+        $WScriptShell = New-Object -ComObject WScript.Shell
+        $lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')
+        $Shortcut = $WScriptShell.CreateShortcut($($lnkfile))
+        $Shortcut.TargetPath = 'powershell.exe'
+        $Shortcut.Arguments = "-NoLogo -NoProfile -ExecutionPolicy bypass -file `"$($PSSysTray.FullName)`""
+        $icon = Get-Item (Join-Path $module.ModuleBase .\Private\PSSysTray.ico)
+        $Shortcut.IconLocation = $icon.FullName
+        $Shortcut.Save()
+        Start-Process explorer.exe $ConfigPath
 
 
     }
+
+
+
 } #end Function

@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Gui menu app in your systray with custom executable functions
+This function launches the System Tray GUI.
 
 ## SYNTAX
 
@@ -21,7 +21,7 @@ Start-PSSysTray [-ConfigFilePath] <String> [-Confirm] [-WhatIf] [<CommonParamete
 
 ## DESCRIPTION
 
-Gui menu app in your systray with custom executable functions
+This function launches the System Tray GUI.
 
 
 ## EXAMPLES
@@ -43,7 +43,7 @@ Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 ### -ConfigFilePath
 
-Path to .csv config file created from New-PSSysTrayConfigFile
+Path to the csv file created by the New-PSSysTrayConfigFile function.
 
 ```yaml
 Type: String

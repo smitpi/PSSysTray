@@ -25,4 +25,4 @@ Documentation can be found at: [Github_Pages](https://smitpi.github.io/PSSysTray
  
 ## Functions
 - [New-PSSysTrayConfigFile](https://smitpi.github.io/PSSysTray/#New-PSSysTrayConfigFile) -- Creates the config file for Start-PSSysTray
-- [Start-PSSysTray](https://smitpi.github.io/PSSysTray/#Start-PSSysTray) -- Gui menu app in your systray with custom executable functions
+- [Start-PSSysTray](https://smitpi.github.io/PSSysTray/#Start-PSSysTray) -- This function launches the System Tray GUI.

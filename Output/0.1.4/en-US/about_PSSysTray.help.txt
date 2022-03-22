@@ -9,8 +9,10 @@ SHORT DESCRIPTION
 NOTES
 Functions in this module:
 	 New-PSSysTrayConfigFile -- Creates the config file for Start-PSSysTray
-	 Start-PSSysTray -- Gui menu app in your systray with custom executable functions
+	 Start-PSSysTray -- This function launches the System Tray GUI.
  
 SEE ALSO
-	 
-	 
+	 https://github.com/smitpi/PSSysTray
+
+	 https://smitpi.github.io/PSSysTray
+

@@ -1,113 +1,43 @@
-#region Private Functions
-#endregion
-#region Public Functions
-#region New-PSSysTrayConfigFile.ps1
-############################################
-# source: New-PSSysTrayConfigFile.ps1
-# Module: PSSysTray
-# version: 0.1.3
-# Author: Pierre Smit
-# Company: HTPCZA Tech
-#############################################
- 
-<#
-.SYNOPSIS
-Creates the config file for Start-PSSysTray
+﻿
+<#PSScriptInfo
 
-.DESCRIPTION
-Creates the config file for Start-PSSysTray
+.VERSION 0.1.0
 
-.PARAMETER ConfigPath
-Path where config file will be saved.
+.GUID 41aa308f-60e2-499b-aa12-a92e73f4a1c1
 
-.PARAMETER CreateShortcut
-Create a shortcut to launch the gui
+.AUTHOR Pierre Smit
 
-.EXAMPLE
-New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
+.COMPANYNAME HTPCZA Tech
+
+.COPYRIGHT
+
+.TAGS ps
+
+.LICENSEURI
+
+.PROJECTURI
+
+.ICONURI
+
+.EXTERNALMODULEDEPENDENCIES
+
+.REQUIREDSCRIPTS
+
+.EXTERNALSCRIPTDEPENDENCIES
+
+.RELEASENOTES
+Created [24/10/2021_05:59] Initial Script Creating
+
+.PRIVATEDATA
 
 #>
-Function New-PSSysTrayConfigFile {
-    [Cmdletbinding(HelpURI = 'https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile/')]
-    PARAM(
-        [ValidateScript( { (Test-Path $_) })]
-        [System.IO.DirectoryInfo]$ConfigPath,
-        [switch]$CreateShortcut = $false
-    )
 
+<#
 
-    [System.Collections.ArrayList]$Export = @()
-    $export += [PSCustomObject]@{
-        MainMenu   = 'Level1'
-        ScriptName = 'TempScript'
-        ScriptPath = 'C:\temp\script.ps1'
-        Mode       = 'PSFile'
-    }
-    $export += [PSCustomObject]@{
-        MainMenu   = 'Level2'
-        ScriptName = 'Command'
-        ScriptPath = 'get-command'
-        Mode       = 'PSCommand'
-    }
-    $export += [PSCustomObject]@{
-        MainMenu   = 'Level3'
-        ScriptName = 'Restart'
-        ScriptPath = 'shutdown /f /r /t 0'
-        Mode       = 'Other'
-    }
+.DESCRIPTION
+ Gui menu app in your systray with custom executable functions
 
-    $Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
-    $check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
-    if (-not($check)) {
-        Write-Output 'Config File does not exit, creating default settings.'
-        $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
-    } else {
-        Write-Warning 'File exists, renaming file now'
-        Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
-        $export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
-    }
-
-    if ($CreateShortcut) {
-        $module = Get-Module pslauncher
-        if (![bool]$module) { $module = Get-Module pslauncher -ListAvailable }
-
-        $string = @"
-`$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
-import-module `$PRModule.fullname -Force
-Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
-"@
-        Set-Content -Value $string -Path (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
-        $PSSysTray = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
-
-        $WScriptShell = New-Object -ComObject WScript.Shell
-        $lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')
-        $Shortcut = $WScriptShell.CreateShortcut($($lnkfile))
-        $Shortcut.TargetPath = 'powershell.exe'
-        $Shortcut.Arguments = "-NoLogo -NoProfile -ExecutionPolicy bypass -file `"$($PSSysTray.FullName)`""
-        $icon = Get-Item (Join-Path $module.ModuleBase .\Private\PSSysTray.ico)
-        $Shortcut.IconLocation = $icon.FullName
-        $Shortcut.Save()
-        Start-Process explorer.exe $ConfigPath
-
-
-    }
-
-
-
-} #end Function
- 
-Export-ModuleMember -Function New-PSSysTrayConfigFile
-#endregion
- 
-#region Start-PSSysTray.ps1
-############################################
-# source: Start-PSSysTray.ps1
-# Module: PSSysTray
-# version: 0.1.3
-# Author: Pierre Smit
-# Company: HTPCZA Tech
-#############################################
- 
+#>
 <#
 .SYNOPSIS
 Gui menu app in your systray with custom executable functions
@@ -121,6 +51,23 @@ Path to .csv config file created from New-PSSysTrayConfigFile
 .EXAMPLE
 Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
 
+#>
+
+<#
+.SYNOPSIS
+Short description
+
+.DESCRIPTION
+Long description
+
+.PARAMETER ConfigFilePath
+Parameter description
+
+.EXAMPLE
+An example
+
+.NOTES
+General notes
 #>
 Function Start-PSSysTray {
     [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray/')]
@@ -272,8 +219,3 @@ Function Start-PSSysTray {
     }
 } #end Function
 
- 
-Export-ModuleMember -Function Start-PSSysTray
-#endregion
- 
-#endregion

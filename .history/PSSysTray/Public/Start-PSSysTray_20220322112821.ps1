@@ -38,6 +38,20 @@ Created [24/10/2021_05:59] Initial Script Creating
  Gui menu app in your systray with custom executable functions
 
 #>
+<#
+.SYNOPSIS
+Gui menu app in your systray with custom executable functions
+
+.DESCRIPTION
+Gui menu app in your systray with custom executable functions
+
+.PARAMETER ConfigFilePath
+Path to .csv config file created from New-PSSysTrayConfigFile
+
+.EXAMPLE
+Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+
+#>
 
 <#
 .SYNOPSIS
@@ -50,8 +64,10 @@ This function launches the System Tray GUI.
 Path to the csv file created by the New-PSSysTrayConfigFile function.
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+An example
 
+.NOTES
+General notes
 #>
 Function Start-PSSysTray {
     [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray/')]

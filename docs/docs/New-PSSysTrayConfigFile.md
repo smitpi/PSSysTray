@@ -16,7 +16,7 @@ Creates the config file for Start-PSSysTray
 ### __AllParameterSets
 
 ```
-New-PSSysTrayConfigFile [[-ConfigPath <DirectoryInfo>]] [-CreateShortcut] [<CommonParameters>]
+New-PSSysTrayConfigFile [[-ConfigPath <DirectoryInfo>]] [-Confirm] [-CreateShortcut] [-WhatIf] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -59,9 +59,27 @@ Accept wildcard characters: False
 DontShow: False
 ```
 
+### -Confirm
+
+{{ Fill Confirm Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+Accepted values: 
+
+Required: True (None) False (All)
+Position: Named
+Default value: 
+Accept pipeline input: False
+Accept wildcard characters: False
+DontShow: False
+```
+
 ### -CreateShortcut
 
-Create a shortcut to launch the gui
+Create a shortcut to a .ps1 file that will launch the gui.
 
 ```yaml
 Type: SwitchParameter
@@ -72,6 +90,24 @@ Accepted values:
 Required: True (None) False (All)
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+DontShow: False
+```
+
+### -WhatIf
+
+{{ Fill WhatIf Description }}
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases: wi
+Accepted values: 
+
+Required: True (None) False (All)
+Position: Named
+Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False
 DontShow: False

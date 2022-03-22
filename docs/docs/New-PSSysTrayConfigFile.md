@@ -60,7 +60,8 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Runs the script without changes.
+Shows what would happen if the cmdlet runs.
+The cmdlet is not run.
 
 ```yaml
 Type: SwitchParameter
@@ -75,7 +76,7 @@ Accept wildcard characters: False
 ```
 
 ### -Confirm
-Will ask before changes are made.
+Prompts you for confirmation before running the cmdlet.
 
 ```yaml
 Type: SwitchParameter

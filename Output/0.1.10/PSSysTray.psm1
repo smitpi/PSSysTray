@@ -5,7 +5,7 @@
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.8
+# version: 0.1.10
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -105,7 +105,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.8
+# version: 0.1.10
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################

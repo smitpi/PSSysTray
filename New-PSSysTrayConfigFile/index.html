@@ -352,8 +352,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-confirm" class="md-nav__link">
+    -Confirm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-createshortcut" class="md-nav__link">
     -CreateShortcut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-whatif" class="md-nav__link">
+    -WhatIf
   </a>
   
 </li>
@@ -503,8 +517,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#-confirm" class="md-nav__link">
+    -Confirm
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#-createshortcut" class="md-nav__link">
     -CreateShortcut
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-whatif" class="md-nav__link">
+    -WhatIf
   </a>
   
 </li>
@@ -558,7 +586,7 @@
 <p>Creates the config file for Start-PSSysTray</p>
 <h2 id="syntax">SYNTAX</h2>
 <h3 id="__allparametersets">__AllParameterSets</h3>
-<div class="highlight"><pre><span></span><code>New-PSSysTrayConfigFile [[-ConfigPath &lt;DirectoryInfo&gt;]] [-CreateShortcut] [&lt;CommonParameters&gt;]
+<div class="highlight"><pre><span></span><code>New-PSSysTrayConfigFile [[-ConfigPath &lt;DirectoryInfo&gt;]] [-Confirm] [-CreateShortcut] [-WhatIf] [&lt;CommonParameters&gt;]
 </code></pre></div>
 <h2 id="description">DESCRIPTION</h2>
 <p>Creates the config file for Start-PSSysTray</p>
@@ -581,8 +609,22 @@
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 </code></pre></div>
+<h3 id="-confirm">-Confirm</h3>
+<p>{{ Fill Confirm Description }}</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
+<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cf</span><span class="w"></span>
+<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
+
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+</code></pre></div>
 <h3 id="-createshortcut">-CreateShortcut</h3>
-<p>Create a shortcut to launch the gui</p>
+<p>Create a shortcut to a .ps1 file that will launch the gui.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
 <span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span>
@@ -591,6 +633,20 @@
 <span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
 <span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
 <span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+</code></pre></div>
+<h3 id="-whatif">-WhatIf</h3>
+<p>{{ Fill WhatIf Description }}</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
+<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
+<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wi</span><span class="w"></span>
+<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
+
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>

@@ -8,8 +8,8 @@ SHORT DESCRIPTION
  
 NOTES
 Functions in this module:
-	 New-PSSysTrayConfigFile -- Creates the config file for Start-PSSysTray
-	 Start-PSSysTray -- This function launches the System Tray GUI.
+	 New-PSSysTrayConfigFile -- Creates the needed .csv file in the specified folder.
+	 Start-PSSysTray -- This function reads csv config file and creates the gui in your system tray.
  
 SEE ALSO
 	 https://github.com/smitpi/PSSysTray

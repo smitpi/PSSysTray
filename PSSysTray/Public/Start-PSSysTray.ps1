@@ -51,18 +51,12 @@ This function reads csv config file and creates the gui in your system tray.
 .PARAMETER ConfigFilePath
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Confirm
-Will ask before changes are made.
-
-.PARAMETER WhatIf
-Runs the script without changes.
-
 .EXAMPLE
 Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv 
 
 #>
 Function Start-PSSysTray {
-		[Cmdletbinding(upportsShouldProcess = $true, HelpURI = "https://smitpi.github.io/PSSysTray/Start-PSSysTray")]	    
+		[Cmdletbinding(SupportsShouldProcess = $true, HelpURI = "https://smitpi.github.io/PSSysTray/Start-PSSysTray")]	    
 		Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]

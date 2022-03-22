@@ -1,61 +1,132 @@
-﻿
-<#PSScriptInfo
-
-.VERSION 0.1.0
-
-.GUID 41aa308f-60e2-499b-aa12-a92e73f4a1c1
-
-.AUTHOR Pierre Smit
-
-.COMPANYNAME HTPCZA Tech
-
-.COPYRIGHT
-
-.TAGS ps
-
-.LICENSEURI
-
-.PROJECTURI
-
-.ICONURI
-
-.EXTERNALMODULEDEPENDENCIES
-
-.REQUIREDSCRIPTS
-
-.EXTERNALSCRIPTDEPENDENCIES
-
-.RELEASENOTES
-Created [24/10/2021_05:59] Initial Script Creating
-
-.PRIVATEDATA
-
-#>
-
-<#
-
-.DESCRIPTION
- Gui menu app in your systray with custom executable functions
-
-#>
-
+﻿#region Private Functions
+#endregion
+#region Public Functions
+#region New-PSSysTrayConfigFile.ps1
+############################################
+# source: New-PSSysTrayConfigFile.ps1
+# Module: PSSysTray
+# version: 0.1.8
+# Author: Pierre Smit
+# Company: HTPCZA Tech
+#############################################
+ 
 <#
 .SYNOPSIS
-This function launches the System Tray GUI.
+Creates the needed .csv file in the specified folder.
 
 .DESCRIPTION
-This function launches the System Tray GUI.
+Creates the needed .csv file in the specified folder.
 
-.PARAMETER ConfigFilePath
-Path to the csv file created by the New-PSSysTrayConfigFile function.
+.PARAMETER ConfigPath
+Path to where the config file will be saved.
+
+.PARAMETER CreateShortcut
+Create a shortcut to a .ps1 file that will launch the gui.
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
+
+#>
+Function New-PSSysTrayConfigFile {
+	[Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile')]
+	PARAM(
+		[ValidateScript( { (Test-Path $_) })]
+		[System.IO.DirectoryInfo]$ConfigPath,
+		[switch]$CreateShortcut = $false
+	)
+
+
+	[System.Collections.ArrayList]$Export = @()
+	$export += [PSCustomObject]@{
+		MainMenu   = 'Level1'
+		ScriptName = 'TempScript'
+		ScriptPath = 'C:\temp\script.ps1'
+		Mode       = 'PSFile'
+	}
+	$export += [PSCustomObject]@{
+		MainMenu   = 'Level2'
+		ScriptName = 'Command'
+		ScriptPath = 'get-command'
+		Mode       = 'PSCommand'
+	}
+	$export += [PSCustomObject]@{
+		MainMenu   = 'Level3'
+		ScriptName = 'Restart'
+		ScriptPath = 'shutdown /f /r /t 0'
+		Mode       = 'Other'
+	}
+
+	if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
+
+		$Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
+		$check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
+		if (-not($check)) {
+			Write-Output 'Config File does not exit, creating default settings.'
+			$export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
+		} else {
+			Write-Warning 'File exists, renaming file now'
+			Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
+			$export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation
+		}
+
+		if ($CreateShortcut) {
+			$module = Get-Module PSSysTray
+			if (![bool]$module) { $module = Get-Module PSSysTray -ListAvailable }
+
+			$string = @"
+`$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
+import-module `$PRModule.fullname -Force
+Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
+"@
+			Set-Content -Value $string -Path (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
+			$PSSysTray = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
+
+			$WScriptShell = New-Object -ComObject WScript.Shell
+			$lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')
+			$Shortcut = $WScriptShell.CreateShortcut($($lnkfile))
+			$Shortcut.TargetPath = 'powershell.exe'
+			$Shortcut.Arguments = "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -file `"$($PSSysTray.FullName)`""
+			$icon = Get-Item (Join-Path $module.ModuleBase .\Private\PSSysTray.ico)
+			$Shortcut.IconLocation = $icon.FullName
+			$Shortcut.Save()
+			Start-Process explorer.exe $ConfigPath
+
+
+		}
+
+
+	}
+} #end Function
+ 
+Export-ModuleMember -Function New-PSSysTrayConfigFile
+#endregion
+ 
+#region Start-PSSysTray.ps1
+############################################
+# source: Start-PSSysTray.ps1
+# Module: PSSysTray
+# version: 0.1.8
+# Author: Pierre Smit
+# Company: HTPCZA Tech
+#############################################
+ 
+<#
+.SYNOPSIS
+This function reads csv config file and creates the gui in your system tray.
+
+.DESCRIPTION
+This function reads csv config file and creates the gui in your system tray.
+
+.PARAMETER ConfigFilePath
+Path to the config file created by New-PSSysTrayConfigFile
+
+.EXAMPLE
+Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv 
 
 #>
 Function Start-PSSysTray {
-    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray/')]
-    Param (
+		[Cmdletbinding(SupportsShouldProcess = $true, HelpURI = "https://smitpi.github.io/PSSysTray/Start-PSSysTray")]	    
+		Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
         [string]$ConfigFilePath
@@ -77,8 +148,8 @@ Function Start-PSSysTray {
         [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
 
         # Add an icon to the systray button
-        $module = Get-Module pslauncher
-        if (![bool]$module) { $module = Get-Module pslauncher -ListAvailable }
+        $module = Get-Module PSSysTray
+        if (![bool]$module) { $module = Get-Module PSSysTray -ListAvailable }
 
 
         $icopath = (Join-Path $module.ModuleBase '\Private\PSSysTray.ico') | Get-Item
@@ -126,7 +197,7 @@ Function Start-PSSysTray {
                     $MenuItem.Add_Click( {
                             ShowConsole
                             $MyScriptPath = $This.MyScriptPath #Used to find proper path during click event
-                            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoProfile -NoLogo -ExecutionPolicy Bypass -File `"$MyScriptPath`"" -ErrorAction Stop
+                            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoProfile -NoLogo -WindowStyle Hidden -ExecutionPolicy Bypass -File `"$MyScriptPath`"" -ErrorAction Stop
                             HideConsole
                         })
                 }
@@ -203,3 +274,8 @@ Function Start-PSSysTray {
     }
 } #end Function
 
+ 
+Export-ModuleMember -Function Start-PSSysTray
+#endregion
+ 
+#endregion

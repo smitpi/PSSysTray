@@ -8,7 +8,7 @@ schema: 2.0.0
 # New-PSSysTrayConfigFile
 
 ## SYNOPSIS
-Creates the config file for Start-PSSysTray
+Creates the needed .csv file in the specified folder.
 
 ## SYNTAX
 
@@ -18,7 +18,7 @@ New-PSSysTrayConfigFile [[-ConfigPath] <DirectoryInfo>] [-CreateShortcut] [-What
 ```
 
 ## DESCRIPTION
-Creates the config file for Start-PSSysTray
+Creates the needed .csv file in the specified folder.
 
 ## EXAMPLES
 
@@ -30,7 +30,7 @@ New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
 ## PARAMETERS
 
 ### -ConfigPath
-Path where config file will be saved.
+Path to where the config file will be saved.
 
 ```yaml
 Type: DirectoryInfo
@@ -60,8 +60,7 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
+Runs the script without changes.
 
 ```yaml
 Type: SwitchParameter
@@ -76,7 +75,7 @@ Accept wildcard characters: False
 ```
 
 ### -Confirm
-Prompts you for confirmation before running the cmdlet.
+Will ask before changes are made.
 
 ```yaml
 Type: SwitchParameter

@@ -6,7 +6,9 @@
 		[ValidateSet('Combine', 'Build')]
 		[string]$Update
 	)
-    $ModuleName = (Get-Item $PSScriptRoot).Name
+    #$ModuleName = (Get-Item $PSScriptRoot).Name
+    $ModuleName = (Get-Item .).Name
+    $fullpath = "D:\SharedProfile\CloudStorage\Dropbox\#Profile\Documents\PowerShell\ProdModules\$ModuleName"
 	if ($Update -like 'Build') {
 		try {
              if (test-path (Join-Path $PSScriptRoot "\Output")) {Remove-Item (Join-Path $PSScriptRoot "\Output") -Force -Recurse -ErrorAction Stop}
@@ -20,11 +22,13 @@
 	}
 
 	try {
-		$newmod = ((Get-ChildItem -Directory (Join-Path $PSScriptRoot "\Output")) | Sort-Object -Property Name -Descending)[0]
-		Get-ChildItem -Directory "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)" | Compress-Archive -DestinationPath "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)\$($ModuleName)-bck.zip" -Update
+		$newmod = ((Get-ChildItem -Directory (Join-Path $fullpath "\Output")) | Sort-Object -Property Name -Descending)[0]
+		if (-not(test-path "$($env:ProgramFiles)\WindowsPowerShell\Modules\$($ModuleName)")) {New-Item "$($env:ProgramFiles)\WindowsPowerShell\Modules\$($ModuleName)" -ItemType Directory -Force | Out-Null}
+        Get-ChildItem -Directory "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)" | Compress-Archive -DestinationPath "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)\$($ModuleName)-bck.zip" -Update
 		Get-ChildItem -Directory "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)" | Remove-Item -Recurse -Force
 		Copy-Item -Path $newmod.FullName -Destination "C:\Program Files\WindowsPowerShell\Modules\$($ModuleName)\" -Force -Recurse
 
+        if (-not(test-path "\\dfnas\Profile\Utils\PSModules\$($ModuleName)")) {New-Item "\\dfnas\Profile\Utils\PSModules\$($ModuleName)" -ItemType Directory -Force | Out-Null}
         Get-ChildItem -Directory "\\dfnas\Profile\Utils\PSModules\$($ModuleName)" | Compress-Archive -DestinationPath "\\dfnas\Profile\Utils\PSModules\$($ModuleName)\$($ModuleName)-bck.zip" -Update
 		Get-ChildItem -Directory "\\dfnas\Profile\Utils\PSModules\$($ModuleName)" | Remove-Item -Recurse -Force
 		Copy-Item -Path $newmod.FullName -Destination "\\dfnas\Profile\Utils\PSModules\$($ModuleName)\" -Force -Recurse

@@ -98,6 +98,28 @@ Function Start-PSSysTray {
         $Systray_Tool_Icon.ContextMenu = $contextmenu
         #endregion
         #region functions
+        function AddEntry {
+
+                
+                $more = "y"
+                do {
+                Clear-Host
+                Write-Host "Fill in the following:"
+                [void]$config.Add([PSCustomObject]@{
+                    MainMenu   = (read-host "MainMenu")
+                    Name       = (read-host "Name")
+                    Command    = (read-host "Command")
+                    Arguments  = (read-host "Arguments")
+                    Mode       = (read-host "Mode")
+                    Window     = (read-host "Window")
+                    RunAsAdmin = (read-host "RunAsAdmin")
+                })
+                $more = Read-Host "Add another entry (y\n)"
+                } while ($more.ToLower() -notlike "n")
+                Rename-Item $ConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+                $notes | Out-File -FilePath $ConfigFilePath -NoClobber -Force
+                $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $ConfigFilePath -Append -NoClobber -Force
+        }
         Function Invoke-Action {
             Param (
                 [string]$name,
@@ -107,8 +129,6 @@ Function Start-PSSysTray {
                 [string]$Window,
                 [string]$RunAsAdmin
             )
-            Write-Verbose "Invoke-Action -name $name -command $command -arguments $arguments -options $options"
-
             [hashtable]$processArguments = @{
                 'PassThru'    = $true
                 'FilePath'    = $command
@@ -129,7 +149,7 @@ Function Start-PSSysTray {
 
             $process = $null
             $process = Start-Process @processArguments
-            if (-not($process)) {[void][Windows.MessageBox]::Show( "Failed to run $($processArguments.FilePath) $processArguments.values" , 'Action Error' , 'Ok' , 'Exclamation' )}
+            if (-not($process)) {[void][Windows.MessageBox]::Show( "Failed to run $($processArguments.FilePath)" , 'Action Error' , 'Ok' , 'Exclamation' )}
         }
         function ShowConsole {
             $PSConsole = [Console.Window]::GetConsoleWindow()
@@ -167,21 +187,30 @@ Function Start-PSSysTray {
         #endregion
         #region process csv file
 
-        $config = Import-Csv -Path $ConfigFilePath -Delimiter ';'
+        [System.Collections.ArrayList]$config = @()
+        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like "##*"} 
         $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike "##*"} | ConvertFrom-Csv -Delimiter ";" 
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }
             foreach ($rec in $record) {
                 #[scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -options `"$(($rec|Select-Object -ExpandProperty options -ErrorAction SilentlyContinue) -split ',')`"" )
-                [System.Collections.ArrayList]$op = @()
-                $rec.Options.Split(',') | ForEach-Object {[void]$op.Add($_)}
                 [scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -Window `"$($rec.Window)`" -RunAsAdmin `"$($rec.RunAsAdmin)`"" )
                 NMenuItem -Text $rec.Name -clickAction $clickAction -MainMenu $tmpmenu
             }
         }
         #endregion
-        #region add exit button and run form.
+        #region Add-Entry
+        $Add_Entry = New-Object System.Windows.Forms.MenuItem
+        $Add_Entry.Text = 'Add Item'
+        $Add_Entry.add_Click( {
+        ShowConsole
+        AddEntry
+        HideConsole
+            })
+        $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Add_Entry)
+        #endregion
+        #region add exit button
         $Menu_Exit = New-Object System.Windows.Forms.MenuItem
         $Menu_Exit.Text = 'Exit'
         $Menu_Exit.add_Click( {
@@ -191,7 +220,7 @@ Function Start-PSSysTray {
                 Stop-Process $pid
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Menu_Exit)
-
+        #endregion
 
         # Create an application context for it to all run within.
         # This helps with responsiveness, especially when clicking Exit.
@@ -199,7 +228,7 @@ Function Start-PSSysTray {
         $appContext = New-Object System.Windows.Forms.ApplicationContext
         [void][System.Windows.Forms.Application]::Run($appContext)
 
-        #endregion
+
     }
 } #end Function
 

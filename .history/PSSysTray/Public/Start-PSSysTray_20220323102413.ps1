@@ -166,9 +166,7 @@ Function Start-PSSysTray {
         }
         #endregion
         #region process csv file
-
         $config = Import-Csv -Path $ConfigFilePath -Delimiter ';'
-        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike "##*"} | ConvertFrom-Csv -Delimiter ";" 
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }

@@ -104,7 +104,7 @@ Function Start-PSSysTray {
                 [string]$command,
                 [string]$arguments,
                 [string]$mode,
-                [string]$Window,
+                [string$Window,
                 [string]$RunAsAdmin
             )
             Write-Verbose "Invoke-Action -name $name -command $command -arguments $arguments -options $options"
@@ -115,7 +115,7 @@ Function Start-PSSysTray {
                 'WindowStyle' = 'Minimized'
             }
 
-            if ( $RunAsAdmin -like 'yes' ) { $processArguments.Add( 'Verb' , 'RunAs' )}
+            if ( $RunAsAdmin -like "yes" ) { $processArguments.Add( 'Verb' , 'RunAs' )}
             if ( $Window -contains 'Hidden' ) { $processArguments.WindowStyle = 'Hidden' }
             if ( $Window -contains 'Normal' ) { $processArguments.WindowStyle = 'Normal' }
             if ( $Window -contains 'Maximized' ) { $processArguments.WindowStyle = 'Maximized' }
@@ -142,7 +142,7 @@ Function Start-PSSysTray {
         function NMenuItem {
             param(
                 [string]$Text = 'Placeholder Text',
-                [scriptblock]$clickAction,
+                [scriptblock]$clickAction,               
                 [System.Windows.Forms.MenuItem]$MainMenu
             )
 
@@ -151,7 +151,7 @@ Function Start-PSSysTray {
 
             #Apply desired text
             if ($Text) { $MenuItem.Text = $Text}
-            $MenuItem.add_click($clickAction)
+            $MenuItem.add_click({$clickAction })
             #Return our new MenuItem
             $MainMenu.MenuItems.AddRange($MenuItem)
         }
@@ -166,9 +166,7 @@ Function Start-PSSysTray {
         }
         #endregion
         #region process csv file
-
         $config = Import-Csv -Path $ConfigFilePath -Delimiter ';'
-        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike "##*"} | ConvertFrom-Csv -Delimiter ";" 
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }

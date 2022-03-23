@@ -63,10 +63,6 @@ Function New-PSSysTrayConfigFile {
 		[System.IO.DirectoryInfo]$ConfigPath,
 		[switch]$CreateShortcut = $false
 	)
-$notes = "## Notes:`n"
-$notes += "## Posible Entries:`n"
-$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
-$notes += "## `t`tRunAsAdmin: Yes,No`n"
 
 
 	[System.Collections.ArrayList]$Export = @()
@@ -87,7 +83,7 @@ $notes += "## `t`tRunAsAdmin: Yes,No`n"
 		Mode = 'PSCommand'
 		Window = 'Maximized'
 		RunAsAdmin = 'yes'
-    }
+
 	$export += [PSCustomObject]@{
 		MainMenu = 'Level3'
 		Name = 'open temp folder'
@@ -96,39 +92,31 @@ $notes += "## `t`tRunAsAdmin: Yes,No`n"
 		Mode = 'Other'
 		Window = 'Normal'
 		RunAsAdmin = 'yes'
-    }
+
 	if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
 
 		$Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
 		$check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
 		if (-not($check)) {
 			Write-Output 'Config File does not exit, creating default settings.'
-            $notes | Out-File -FilePath $Configfile -NoClobber -NoNewline
-            $Export | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation -Delimiter ";"
 		} else {
 			Write-Warning 'File exists, renaming file now'
 			Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
-            $notes | Out-File -FilePath $Configfile -NoClobber
-            $Export | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+					$export | Export-Csv -Path $Configfile -NoClobber -NoTypeInformation -Delimiter ";"
 		}
 
 		if ($CreateShortcut) {
 			$module = Get-Module PSSysTray
 			if (![bool]$module) { $module = Get-Module PSSysTray -ListAvailable }
-            if (![bool]$module) {throw "Could not find module"}
 
 			$string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 import-module `$PRModule.fullname -Force
 Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
-
-	$DestFile = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1)
-	if (test-path $DestFile) {
-        Remove-Item ((Get-Item $DestFile).FullName).Replace("ps1","lnk")
-        Remove-Item (Get-Item $DestFile).FullName
-	}
-    $PSSysTray = New-Item -Path $DestFile -ItemType File -Value $string
+			Set-Content -Value $string -Path (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) -Force | Get-Item
+			$PSSysTray = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1) | Get-Item
 
 			$WScriptShell = New-Object -ComObject WScript.Shell
 			$lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')

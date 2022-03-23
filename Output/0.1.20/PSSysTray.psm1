@@ -1,11 +1,11 @@
-#region Private Functions
+﻿#region Private Functions
 #endregion
 #region Public Functions
 #region New-PSSysTrayConfigFile.ps1
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.19
+# version: 0.1.20
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -123,7 +123,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.19
+# version: 0.1.20
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################

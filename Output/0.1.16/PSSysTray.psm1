@@ -5,7 +5,7 @@
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.15
+# version: 0.1.16
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -34,10 +34,11 @@ Function New-PSSysTrayConfigFile {
 		[System.IO.DirectoryInfo]$ConfigPath,
 		[switch]$CreateShortcut = $false
 	)
-$notes = "## Notes:`n"
-$notes += "## Posible Entries:`n"
-$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
-$notes += "## `t`tRunAsAdmin: Yes,No`n"
+	$notes = "## Notes:`n"
+	$notes += "## Posible Entries:`n"
+	$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
+	$notes += "## `t`tMode: PSFile(Powershell .ps1 file), PSCommand (Powershell Command), Other (All other executables)`n"
+	$notes += "## `t`tRunAsAdmin: Yes,No`n"
 
 
 	[System.Collections.ArrayList]$Export = @()
@@ -51,42 +52,42 @@ $notes += "## `t`tRunAsAdmin: Yes,No`n"
 		RunAsAdmin = 'no'
 	}
 	$export += [PSCustomObject]@{
-		MainMenu = 'Level2'
-		Name = 'TempScript'
-		Command = 'Powershell.exe'
-		Arguments = 'get-command'
-		Mode = 'PSCommand'
-		Window = 'Maximized'
+		MainMenu   = 'Level2'
+		Name       = 'TempScript'
+		Command    = 'Powershell.exe'
+		Arguments  = 'get-command'
+		Mode       = 'PSCommand'
+		Window     = 'Maximized'
 		RunAsAdmin = 'yes'
-    }
+	}
 	$export += [PSCustomObject]@{
-		MainMenu = 'Level3'
-		Name = 'open temp folder'
-		Command = 'explorer.exe'
-		Arguments = 'c:\Temp'
-		Mode = 'Other'
-		Window = 'Normal'
+		MainMenu   = 'Level3'
+		Name       = 'open temp folder'
+		Command    = 'explorer.exe'
+		Arguments  = 'c:\Temp'
+		Mode       = 'Other'
+		Window     = 'Normal'
 		RunAsAdmin = 'yes'
-    }
+	}
 	if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
 
 		$Configfile = (Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv)
 		$check = Test-Path -Path $Configfile -ErrorAction SilentlyContinue
 		if (-not($check)) {
 			Write-Output 'Config File does not exit, creating default settings.'
-            $notes | Out-File -FilePath $Configfile -NoClobber -NoNewline
-            $Export | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$notes | Out-File -FilePath $Configfile -NoClobber -NoNewline
+			$Export | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
 		} else {
 			Write-Warning 'File exists, renaming file now'
 			Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
-            $notes | Out-File -FilePath $Configfile -NoClobber
-            $Export | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$notes | Out-File -FilePath $Configfile -NoClobber
+			$Export | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
 		}
 
 		if ($CreateShortcut) {
 			$module = Get-Module PSSysTray
 			if (![bool]$module) { $module = Get-Module PSSysTray -ListAvailable }
-            if (![bool]$module) {throw "Could not find module"}
+			if (![bool]$module) {throw 'Could not find module'}
 
 			$string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
@@ -94,12 +95,12 @@ import-module `$PRModule.fullname -Force
 Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
 
-	$DestFile = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1)
-	if (test-path $DestFile) {
-        Remove-Item ((Get-Item $DestFile).FullName).Replace("ps1","lnk")
-        Remove-Item (Get-Item $DestFile).FullName
-	}
-    $PSSysTray = New-Item -Path $DestFile -ItemType File -Value $string
+			$DestFile = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1)
+			if (Test-Path $DestFile) {
+				Remove-Item ((Get-Item $DestFile).FullName).Replace('ps1', 'lnk')
+				Remove-Item (Get-Item $DestFile).FullName
+			}
+			$PSSysTray = New-Item -Path $DestFile -ItemType File -Value $string
 
 			$WScriptShell = New-Object -ComObject WScript.Shell
 			$lnkfile = ($PSSysTray.FullName).Replace('ps1', 'lnk')
@@ -110,11 +111,7 @@ Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayCo
 			$Shortcut.IconLocation = $icon.FullName
 			$Shortcut.Save()
 			Start-Process explorer.exe $ConfigPath
-
-
 		}
-
-
 	}
 } #end Function
  
@@ -125,7 +122,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.15
+# version: 0.1.16
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -141,11 +138,11 @@ This function reads csv config file and creates the gui in your system tray.
 Path to the config file created by New-PSSysTrayConfigFile
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv 
+Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Start-PSSysTray {
-    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]	    
+    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]
     Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
@@ -188,33 +185,32 @@ Function Start-PSSysTray {
         #endregion
         #region functions
         function AddEntry {
-                $more = "y"
-                do {
+            $more = 'y'
+            do {
                 Clear-Host
-                Write-Host "Fill in the following:"
+                Write-Host 'Fill in the following:'
                 [void]$config.Add([PSCustomObject]@{
-                    MainMenu   = (read-host "MainMenu")
-                    Name       = (read-host "Name")
-                    Command    = (read-host "Command")
-                    Arguments  = (read-host "Arguments")
-                    Mode       = (read-host "Mode")
-                    Window     = (read-host "Window")
-                    RunAsAdmin = (read-host "RunAsAdmin")
-                })
-                $more = Read-Host "Add another entry (y\n)"
-                } while ($more.ToLower() -notlike "n")
-                Rename-Item $ConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
-                $notes | Out-File -FilePath $ConfigFilePath -NoClobber -Force
-                $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ";" -NoTypeInformation | Out-File -FilePath $ConfigFilePath -Append -NoClobber -Force
+                        MainMenu   = (Read-Host 'MainMenu')
+                        Name       = (Read-Host 'Name')
+                        Command    = (Read-Host 'Command')
+                        Arguments  = (Read-Host 'Arguments')
+                        Mode       = (Read-Host 'Mode')
+                        Window     = (Read-Host 'Window')
+                        RunAsAdmin = (Read-Host 'RunAsAdmin')
+                    })
+                $more = Read-Host 'Add another entry (y\n)'
+            } while ($more.ToLower() -notlike 'n')
+            Rename-Item $ConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+            $notes | Out-File -FilePath $ConfigFilePath -NoClobber -Force
+            $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $ConfigFilePath -Append -NoClobber -Force
 
-                # Action after clicking on the Restart context menu
-            start-process -FilePath "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -ConfigFilePath $($ConfigFilePath)}"""            
-             $Systray_Tool_Icon.Visible = $false
-             Stop-Process $pid
+            # Action after clicking on the Restart context menu
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -ConfigFilePath $($ConfigFilePath)}"""
+            $Systray_Tool_Icon.Visible = $false
+            Stop-Process $pid
         }
         Function Invoke-Action {
             Param (
-                [string]$name,
                 [string]$command,
                 [string]$arguments,
                 [string]$mode,
@@ -240,12 +236,12 @@ Function Start-PSSysTray {
 
 
             try {
-            Start-Process @processArguments
+                Start-Process @processArguments
             } catch {
                 $Text = $This.Text
                 [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`n$_") > $null
             }
-            
+
         }
         function ShowConsole {
             $PSConsole = [Console.Window]::GetConsoleWindow()
@@ -284,8 +280,8 @@ Function Start-PSSysTray {
         #region process csv file
 
         [System.Collections.ArrayList]$config = @()
-        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like "##*"} 
-        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike "##*"} | ConvertFrom-Csv -Delimiter ";" 
+        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like '##*'}
+        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }
@@ -300,20 +296,18 @@ Function Start-PSSysTray {
         $Add_Entry = New-Object System.Windows.Forms.MenuItem
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
-        ShowConsole
-        AddEntry
-        HideConsole
+                ShowConsole
+                AddEntry
+                HideConsole
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Add_Entry)
         #endregion
         #region add exit button
         $Menu_Exit = New-Object System.Windows.Forms.MenuItem
-        
+
         $Menu_Exit.Text = 'Exit'
         $Menu_Exit.add_Click( {
                 $Systray_Tool_Icon.Visible = $false
-                $window.Close()
-                $window_Config.Close()
                 Stop-Process $pid
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Menu_Exit)

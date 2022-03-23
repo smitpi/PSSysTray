@@ -19,7 +19,7 @@
 
 .ICONURI
 
-.EXTERNALMODULEDEPENDENCIES
+.EXTERNALMODULEDEPENDENCIES 
 
 .REQUIREDSCRIPTS
 
@@ -33,12 +33,12 @@ Created [22/03/2022_11:57] Initial Script Creating
 #>
 
 
-<#
+<# 
 
-.DESCRIPTION
- This function reads csv config file and creates the gui in your system tray.
+.DESCRIPTION 
+ This function reads csv config file and creates the gui in your system tray. 
 
-#>
+#> 
 
 
 <#
@@ -52,11 +52,11 @@ This function reads csv config file and creates the gui in your system tray.
 Path to the config file created by New-PSSysTrayConfigFile
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv 
 
 #>
 Function Start-PSSysTray {
-    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]
+    [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]	    
     Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
@@ -119,12 +119,13 @@ Function Start-PSSysTray {
             $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $ConfigFilePath -Append -NoClobber -Force
 
             # Action after clicking on the Restart context menu
-            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -ConfigFilePath $($ConfigFilePath)}"""
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -ConfigFilePath $($ConfigFilePath)}"""            
             $Systray_Tool_Icon.Visible = $false
             Stop-Process $pid
         }
         Function Invoke-Action {
             Param (
+                [string]$name,
                 [string]$command,
                 [string]$arguments,
                 [string]$mode,
@@ -155,7 +156,7 @@ Function Start-PSSysTray {
                 $Text = $This.Text
                 [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`n$_") > $null
             }
-
+            
         }
         function ShowConsole {
             $PSConsole = [Console.Window]::GetConsoleWindow()
@@ -194,8 +195,8 @@ Function Start-PSSysTray {
         #region process csv file
 
         [System.Collections.ArrayList]$config = @()
-        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like '##*'}
-        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like '##*'} 
+        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';' 
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }
@@ -218,10 +219,12 @@ Function Start-PSSysTray {
         #endregion
         #region add exit button
         $Menu_Exit = New-Object System.Windows.Forms.MenuItem
-
+        
         $Menu_Exit.Text = 'Exit'
         $Menu_Exit.add_Click( {
                 $Systray_Tool_Icon.Visible = $false
+                $window.Close()
+                $window_Config.Close()
                 Stop-Process $pid
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Menu_Exit)

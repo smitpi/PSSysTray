@@ -140,6 +140,10 @@ Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayCo
 			$Shortcut.IconLocation = $icon.FullName
 			$Shortcut.Save()
 			Start-Process explorer.exe $ConfigPath
+
+
 		}
+
+
 	}
 } #end Function

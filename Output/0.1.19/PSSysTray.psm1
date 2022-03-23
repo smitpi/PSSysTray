@@ -1,11 +1,11 @@
-﻿#region Private Functions
+#region Private Functions
 #endregion
 #region Public Functions
 #region New-PSSysTrayConfigFile.ps1
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.16
+# version: 0.1.19
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -39,6 +39,7 @@ Function New-PSSysTrayConfigFile {
 	$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
 	$notes += "## `t`tMode: PSFile(Powershell .ps1 file), PSCommand (Powershell Command), Other (All other executables)`n"
 	$notes += "## `t`tRunAsAdmin: Yes,No`n"
+	$notes += "##`n"
 
 
 	[System.Collections.ArrayList]$Export = @()
@@ -122,7 +123,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.16
+# version: 0.1.19
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################

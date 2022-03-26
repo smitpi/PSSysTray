@@ -68,7 +68,7 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
       $rs.ApartmentState = 'STA'
       $rs.ThreadOptions = 'ReuseThread'
       $rs.Open()
-      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$global:PSSysTrayConfigFilePath)
+      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
 
       $psCmd = [PowerShell]::Create().AddScript({
     
@@ -213,8 +213,8 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
                 ShowConsole
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
+                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"" -wait"
+               # 
                 $Systray_Tool_Icon.Visible = $false
                 Stop-Process $pid
                 HideConsole

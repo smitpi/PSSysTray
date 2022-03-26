@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.13
+# version: 0.1.14
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -57,6 +57,7 @@ Function Add-PSSysTrayEntry {
           Rename-Item $PSSysTrayConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
           $notes | Out-File -FilePath $PSSysTrayConfigFilePath -NoClobber -Force
           $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
+          Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
 } #end Function
  
 Export-ModuleMember -Function Add-PSSysTrayEntry
@@ -66,7 +67,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.13
+# version: 0.1.14
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -184,7 +185,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.13
+# version: 0.1.14
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -216,7 +217,7 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
       $rs.ApartmentState = 'STA'
       $rs.ThreadOptions = 'ReuseThread'
       $rs.Open()
-      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$global:PSSysTrayConfigFilePath)
+      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
 
       $psCmd = [PowerShell]::Create().AddScript({
     
@@ -361,8 +362,8 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
                 ShowConsole
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
+                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"" -wait"
+               # 
                 $Systray_Tool_Icon.Visible = $false
                 Stop-Process $pid
                 HideConsole

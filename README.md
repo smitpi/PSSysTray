@@ -24,5 +24,6 @@ Get-Help about_PSSysTray
 Documentation can be found at: [Github_Pages](https://smitpi.github.io/PSSysTray)
  
 ## Functions
+- [Add-PSSysTrayEntry](https://smitpi.github.io/PSSysTray/#Add-PSSysTrayEntry) -- Add an entry in the csv file
 - [New-PSSysTrayConfigFile](https://smitpi.github.io/PSSysTray/#New-PSSysTrayConfigFile) -- Creates the needed .csv file in the specified folder.
 - [Start-PSSysTray](https://smitpi.github.io/PSSysTray/#Start-PSSysTray) -- This function reads csv config file and creates the gui in your system tray.

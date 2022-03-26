@@ -5,23 +5,23 @@ online version:
 schema: 2.0.0
 ---
 
-# Start-PSSysTray
+# Add-PSSysTrayEntry
 
 ## SYNOPSIS
 
-This function reads csv config file and creates the gui in your system tray.
+Add an entry in the csv file
 
 ## SYNTAX
 
-### __AllParameterSets
+### Set1 (Default)
 
 ```
-Start-PSSysTray [-PSSysTrayConfigFilePath] <String> [-Confirm] [-WhatIf] [<CommonParameters>]
+Add-PSSysTrayEntry [-PSSysTrayConfigFilePath] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-This function reads csv config file and creates the gui in your system tray.
+Add an entry in the csv file
 
 
 ## EXAMPLES
@@ -29,7 +29,7 @@ This function reads csv config file and creates the gui in your system tray.
 ### Example 1: EXAMPLE 1
 
 ```
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Add-PSSysTrayEntry
 ```
 
 
@@ -40,24 +40,6 @@ Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 
 ## PARAMETERS
-
-### -Confirm
-
-{{ Fill Confirm Description }}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-Accepted values: 
-
-Required: True (None) False (All)
-Position: Named
-Default value: 
-Accept pipeline input: False
-Accept wildcard characters: False
-DontShow: False
-```
 
 ### -PSSysTrayConfigFilePath
 
@@ -71,24 +53,6 @@ Accepted values:
 
 Required: True (All) False (None)
 Position: 0
-Default value: 
-Accept pipeline input: False
-Accept wildcard characters: False
-DontShow: False
-```
-
-### -WhatIf
-
-{{ Fill WhatIf Description }}
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: wi
-Accepted values: 
-
-Required: True (None) False (All)
-Position: Named
 Default value: 
 Accept pipeline input: False
 Accept wildcard characters: False

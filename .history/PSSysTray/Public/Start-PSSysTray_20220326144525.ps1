@@ -60,18 +60,17 @@ Function Start-PSSysTray {
     Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
-        [string]$PSSysTrayConfigFilePath
+        [string]$ConfigFilePath
     )
 
-if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
-      $rs = [RunspaceFactory]::CreateRunspace()
-      $rs.ApartmentState = 'STA'
-      $rs.ThreadOptions = 'ReuseThread'
-      $rs.Open()
-      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$global:PSSysTrayConfigFilePath)
 
-      $psCmd = [PowerShell]::Create().AddScript({
-    
+    $rs = [RunspaceFactory]::CreateRunspace()
+    $rs.ApartmentState = 'STA'
+    $rs.ThreadOptions = 'ReuseThread'
+    $rs.Open()
+
+    $psCmd = [PowerShell]::Create().AddScript({
+    if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         #region load assemblies
         Add-Type -Name Window -Namespace Console -MemberDefinition '
     [DllImport("Kernel32.dll")]
@@ -122,10 +121,14 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
                     })
                 $more = Read-Host 'Add another entry (y\n)'
             } while ($more.ToLower() -notlike 'n')
-            Rename-Item $PSSysTrayConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
-            $notes | Out-File -FilePath $PSSysTrayConfigFilePath -NoClobber -Force
-            $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
+            Rename-Item $ConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+            $notes | Out-File -FilePath $ConfigFilePath -NoClobber -Force
+            $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $ConfigFilePath -Append -NoClobber -Force
 
+            # Action after clicking on the Restart context menu
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -ConfigFilePath $($ConfigFilePath)}"""
+            $Systray_Tool_Icon.Visible = $false
+            Stop-Process $pid
         }
         Function Invoke-Action {
             Param (
@@ -196,9 +199,10 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         }
         #endregion
         #region process csv file
+
         [System.Collections.ArrayList]$config = @()
-        $notes = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -like '##*'}
-        $config = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+        $notes = Get-Content $ConfigFilePath | Where-Object {$_ -like '##*'}
+        $config = Get-Content $ConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
         foreach ($main in ($config.mainmenu | Get-Unique)) {
             $tmpmenu = NMainMenu -Text $main
             $record = $config | Where-Object { $_.Mainmenu -like $main }
@@ -213,10 +217,7 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
                 ShowConsole
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
-                $Systray_Tool_Icon.Visible = $false
-                Stop-Process $pid
+                AddEntry
                 HideConsole
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Add_Entry)
@@ -231,18 +232,17 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
             })
         $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($Menu_Exit)
         #endregion
-        #region Start gui
+
         # Create an application context for it to all run within.
         # This helps with responsiveness, especially when clicking Exit.
         HideConsole
         $appContext = New-Object System.Windows.Forms.ApplicationContext
         [void][System.Windows.Forms.Application]::Run($appContext)
-        #endregion
-    
-    })
 
-     $pscmd.runspace = $rs
-     [void]$pscmd.BeginInvoke()
+
     }
+})
+
+
 } #end Function
 

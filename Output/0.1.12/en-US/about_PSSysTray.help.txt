@@ -8,6 +8,7 @@ SHORT DESCRIPTION
  
 NOTES
 Functions in this module:
+	 Add-PSSysTrayEntry -- Add an entry in the csv file
 	 New-PSSysTrayConfigFile -- Creates the needed .csv file in the specified folder.
 	 Start-PSSysTray -- This function reads csv config file and creates the gui in your system tray.
  

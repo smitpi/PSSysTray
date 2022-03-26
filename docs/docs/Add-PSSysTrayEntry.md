@@ -29,7 +29,7 @@ Add an entry in the csv file
 ### Example 1: EXAMPLE 1
 
 ```
-Add-PSSysTrayEntry
+Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 ```
 
 
@@ -43,7 +43,7 @@ Add-PSSysTrayEntry
 
 ### -PSSysTrayConfigFilePath
 
-{{ Fill PSSysTrayConfigFilePath Description }}
+Path to the config file created by New-PSSysTrayConfigFile
 
 ```yaml
 Type: String

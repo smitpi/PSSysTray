@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.15
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -17,8 +17,11 @@ Add an entry in the csv file
 .DESCRIPTION
 Add an entry in the csv file
 
+.PARAMETER PSSysTrayConfigFilePath
+Path to the config file created by New-PSSysTrayConfigFile
+
 .EXAMPLE
-Add-PSSysTrayEntry
+Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Add-PSSysTrayEntry {
@@ -67,7 +70,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.15
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -155,7 +158,7 @@ Function New-PSSysTrayConfigFile {
 			$string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 import-module `$PRModule.fullname -Force
-Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
+Start-PSSysTray -PSSysTrayConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
 
 			$DestFile = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1)
@@ -185,7 +188,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.15
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -197,11 +200,11 @@ This function reads csv config file and creates the gui in your system tray.
 .DESCRIPTION
 This function reads csv config file and creates the gui in your system tray.
 
-.PARAMETER ConfigFilePath
+.PARAMETER PSSysTrayConfigFilePath
 Path to the config file created by New-PSSysTrayConfigFile
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Start-PSSysTray {
@@ -213,13 +216,13 @@ Function Start-PSSysTray {
     )
 
 if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
-      $rs = [RunspaceFactory]::CreateRunspace()
-      $rs.ApartmentState = 'STA'
-      $rs.ThreadOptions = 'ReuseThread'
-      $rs.Open()
-      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
+      #$rs = [RunspaceFactory]::CreateRunspace()
+      #$rs.ApartmentState = 'STA'
+     # $rs.ThreadOptions = 'ReuseThread'
+      #$rs.Open()
+      #$rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
 
-      $psCmd = [PowerShell]::Create().AddScript({
+      #$psCmd = [PowerShell]::Create().AddScript({
     
         #region load assemblies
         Add-Type -Name Window -Namespace Console -MemberDefinition '
@@ -388,10 +391,10 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         [void][System.Windows.Forms.Application]::Run($appContext)
         #endregion
     
-    })
+   # })
 
-     $pscmd.runspace = $rs
-     [void]$pscmd.BeginInvoke()
+    # $pscmd.runspace = $rs
+    # [void]$pscmd.BeginInvoke()
     }
 } #end Function
 

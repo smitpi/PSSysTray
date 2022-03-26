@@ -122,7 +122,7 @@ Function New-PSSysTrayConfigFile {
 			$string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 import-module `$PRModule.fullname -Force
-Start-PSSysTray -ConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
+Start-PSSysTray -PSSysTrayConfigFilePath $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
 
 			$DestFile = (Join-Path $ConfigPath -ChildPath \PSSysTray.ps1)

@@ -51,8 +51,11 @@ Add an entry in the csv file
 .DESCRIPTION
 Add an entry in the csv file
 
+.PARAMETER PSSysTrayConfigFilePath
+Path to the config file created by New-PSSysTrayConfigFile
+
 .EXAMPLE
-Add-PSSysTrayEntry
+Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Add-PSSysTrayEntry {

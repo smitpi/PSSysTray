@@ -48,11 +48,11 @@ This function reads csv config file and creates the gui in your system tray.
 .DESCRIPTION
 This function reads csv config file and creates the gui in your system tray.
 
-.PARAMETER ConfigFilePath
+.PARAMETER PSSysTrayConfigFilePath
 Path to the config file created by New-PSSysTrayConfigFile
 
 .EXAMPLE
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Start-PSSysTray {
@@ -64,13 +64,13 @@ Function Start-PSSysTray {
     )
 
 if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
-      $rs = [RunspaceFactory]::CreateRunspace()
-      $rs.ApartmentState = 'STA'
-      $rs.ThreadOptions = 'ReuseThread'
-      $rs.Open()
-      $rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
+      #$rs = [RunspaceFactory]::CreateRunspace()
+      #$rs.ApartmentState = 'STA'
+     # $rs.ThreadOptions = 'ReuseThread'
+      #$rs.Open()
+      #$rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
 
-      $psCmd = [PowerShell]::Create().AddScript({
+      #$psCmd = [PowerShell]::Create().AddScript({
     
         #region load assemblies
         Add-Type -Name Window -Namespace Console -MemberDefinition '
@@ -239,10 +239,10 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         [void][System.Windows.Forms.Application]::Run($appContext)
         #endregion
     
-    })
+   # })
 
-     $pscmd.runspace = $rs
-     [void]$pscmd.BeginInvoke()
+    # $pscmd.runspace = $rs
+    # [void]$pscmd.BeginInvoke()
     }
 } #end Function
 

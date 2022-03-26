@@ -29,7 +29,7 @@ This function reads csv config file and creates the gui in your system tray.
 ### Example 1: EXAMPLE 1
 
 ```
-Start-PSSysTray -ConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 ```
 
 
@@ -61,7 +61,7 @@ DontShow: False
 
 ### -PSSysTrayConfigFilePath
 
-{{ Fill PSSysTrayConfigFilePath Description }}
+Path to the config file created by New-PSSysTrayConfigFile
 
 ```yaml
 Type: String

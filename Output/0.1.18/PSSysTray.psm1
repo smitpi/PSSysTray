@@ -1,114 +1,111 @@
-#region Private Functions
+﻿#region Private Functions
 #endregion
 #region Public Functions
 #region Add-PSSysTrayEntry.ps1
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.16
+# version: 0.1.18
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
  
 <#
 .SYNOPSIS
-Add an entry in the csv file
+Add an entry in the csv config file.
 
 .DESCRIPTION
-Add an entry in the csv file
+Add an entry in the csv config file.
 
 .PARAMETER PSSysTrayConfigFilePath
 Path to the config file created by New-PSSysTrayConfigFile
 
 .EXAMPLE
-Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
 Function Add-PSSysTrayEntry {
-		[Cmdletbinding(DefaultParameterSetName='Set1', HelpURI = "https://smitpi.github.io/PSSysTray/Add-PSSysTrayEntry")]
-                 Param (
+    [Cmdletbinding(DefaultParameterSetName = 'Set1', HelpURI = 'https://smitpi.github.io/PSSysTray/Add-PSSysTrayEntry')]
+    Param (
         [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript( { (Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv') })]
         [string]$PSSysTrayConfigFilePath
     )
 
 
-        [System.Collections.ArrayList]$config = @()
-        $notes = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -like '##*'}
-        $config = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
-        function mainmenu {
-            Write-Color "Choose the Main Menu:" -Color DarkRed -StartTab 1 -LinesBefore 2
-            $index = 0
-            $mainmenulist = ($config.mainmenu | Get-Unique)
-            $mainmenulist | ForEach-Object {
-                Write-Color "$($index)) ",$_ -Color Yellow,Green
-                $index++
-            }
-            Write-Color "n)","New Main Menu" -Color Yellow,Green
-            $choose = Read-Host "Answer"
-            if ($choose.ToLower() -like "n"){$MainMenu = Read-Host "New Menu Name"}
-            else {$MainMenu = $mainmenulist[$choose]}
-            $MainMenu
+    [System.Collections.ArrayList]$config = @()
+    $notes = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -like '##*'}
+    $config = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    function mainmenu {
+        Write-Color 'Choose the Main Menu:' -Color DarkRed -StartTab 1 -LinesBefore 2
+        $index = 0
+        $mainmenulist = ($config.mainmenu | Get-Unique)
+        $mainmenulist | ForEach-Object {
+            Write-Color "$($index)) ", $_ -Color Yellow, Green
+            $index++
         }
-        function mode {
-            Write-Color "Choose the mode:" -Color DarkRed -StartTab 1 -LinesBefore 2
-            Write-Color "0) ","PowerShell Script file" -Color Yellow,Green
-            Write-Color "1) ","PowerShell Command" -Color Yellow,Green
-            Write-Color "2) ","Other Executable" -Color Yellow,Green
-            $modechoose = Read-Host "Answer"
+        Write-Color 'n)', 'New Main Menu' -Color Yellow, Green
+        $choose = Read-Host 'Answer'
+        if ($choose.ToLower() -like 'n') {$MainMenu = Read-Host 'New Menu Name'}
+        else {$MainMenu = $mainmenulist[$choose]}
+        $MainMenu
+    }
+    function mode {
+        Write-Color 'Choose the mode:' -Color DarkRed -StartTab 1 -LinesBefore 2
+        Write-Color '0) ', 'PowerShell Script file' -Color Yellow, Green
+        Write-Color '1) ', 'PowerShell Command' -Color Yellow, Green
+        Write-Color '2) ', 'Other Executable' -Color Yellow, Green
+        $modechoose = Read-Host 'Answer'
 
-            switch ($modechoose)
-            {
-                '0' {$mode = "PSFile"}
-                '1' {$mode = "PSCommand"}
-                '2' {$mode = "Other"}
-            }
-                $mode
+        switch ($modechoose) {
+            '0' {$mode = 'PSFile'}
+            '1' {$mode = 'PSCommand'}
+            '2' {$mode = 'Other'}
         }
-        function window {
-            Write-Color "Choose the window size:" -Color DarkRed -StartTab 1 -LinesBefore 2
-            Write-Color "0) ","Hidden" -Color Yellow,Green
-            Write-Color "1) ","Maximized" -Color Yellow,Green
-            Write-Color "2) ","Normal" -Color Yellow,Green
-            Write-Color "3) ","Minimized" -Color Yellow,Green
-            $modechoose = Read-Host "Answer" 
+        $mode
+    }
+    function window {
+        Write-Color 'Choose the window size:' -Color DarkRed -StartTab 1 -LinesBefore 2
+        Write-Color '0) ', 'Hidden' -Color Yellow, Green
+        Write-Color '1) ', 'Maximized' -Color Yellow, Green
+        Write-Color '2) ', 'Normal' -Color Yellow, Green
+        Write-Color '3) ', 'Minimized' -Color Yellow, Green
+        $modechoose = Read-Host 'Answer'
 
-            switch ($modechoose)
-            {
-                '0' {$Window = "Hidden"}
-                '1' {$Window = "Maximized"}
-                '2' {$Window = "Normal"}
-                '3' {$Window = "Minimized"}
-            }
-                $Window
+        switch ($modechoose) {
+            '0' {$Window = 'Hidden'}
+            '1' {$Window = 'Maximized'}
+            '2' {$Window = 'Normal'}
+            '3' {$Window = 'Minimized'}
         }
-        function RunAs {
-            Write-Color "Run As Admin:" -Color DarkRed -StartTab 1 -LinesBefore 2
-            Write-Color "0) ","Yes" -Color Yellow,Green
-            Write-Color "1) ","No" -Color Yellow,Green
-            $modechoose = Read-Host "Answer"
-            switch ($modechoose)
-            {
-                '0' {$RunAs = "Yes"}
-                '1' {$RunAs = "No"}
-            }
-                $RunAs
+        $Window
+    }
+    function RunAs {
+        Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
+        Write-Color '0) ', 'Yes' -Color Yellow, Green
+        Write-Color '1) ', 'No' -Color Yellow, Green
+        $modechoose = Read-Host 'Answer'
+        switch ($modechoose) {
+            '0' {$RunAs = 'Yes'}
+            '1' {$RunAs = 'No'}
         }
+        $RunAs
+    }
 
-        [void]$config.Add([PSCustomObject]@{
+    [void]$config.Add([PSCustomObject]@{
             MainMenu   = mainmenu
             Name       = (Read-Host 'New Entry Name')
             Command    = (Read-Host 'Path to .exe')
             Arguments  = (Read-Host 'Arguments for executable')
             Mode       = Mode
-            Window     = window
+            Window     = Window
             RunAsAdmin = RunAs
-         })
+        })
 
-          Rename-Item $PSSysTrayConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
-          $notes | Out-File -FilePath $PSSysTrayConfigFilePath -NoClobber -Force
-          $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
-          Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
+    Rename-Item $PSSysTrayConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+    $notes | Out-File -FilePath $PSSysTrayConfigFilePath -NoClobber -Force
+    $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
+    Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
 } #end Function
  
 Export-ModuleMember -Function Add-PSSysTrayEntry
@@ -118,7 +115,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.16
+# version: 0.1.18
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -236,7 +233,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.16
+# version: 0.1.18
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -401,6 +398,9 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         }
         #endregion
         #region Add-Entry
+        $line = New-Object System.Windows.Forms.MenuItem
+        $line.Text = '___________________________'
+        $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($line)
         $Add_Entry = New-Object System.Windows.Forms.MenuItem
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
@@ -438,3 +438,5 @@ Export-ModuleMember -Function Start-PSSysTray
 #endregion
  
 #endregion
+ 
+

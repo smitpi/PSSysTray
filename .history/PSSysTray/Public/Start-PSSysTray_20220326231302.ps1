@@ -55,6 +55,22 @@ Path to the config file created by New-PSSysTrayConfigFile
 Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
+<#
+.SYNOPSIS
+Short description
+
+.DESCRIPTION
+Long description
+
+.PARAMETER PSSysTrayConfigFilePath
+Parameter description
+
+.EXAMPLE
+An example
+
+.NOTES
+General notes
+#>
 Function Start-PSSysTray {
     [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]
     Param (

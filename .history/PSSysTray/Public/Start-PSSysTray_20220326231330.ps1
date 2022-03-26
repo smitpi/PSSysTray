@@ -55,6 +55,20 @@ Path to the config file created by New-PSSysTrayConfigFile
 Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 
 #>
+<#
+.SYNOPSIS
+This function reads csv config file and creates the gui in your system tray.
+
+.DESCRIPTION
+This function reads csv config file and creates the gui in your system tray.
+
+.PARAMETER PSSysTrayConfigFilePath
+Path to the config file created by New-PSSysTrayConfigFile
+
+.EXAMPLE
+Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+
+#>
 Function Start-PSSysTray {
     [Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/Start-PSSysTray')]
     Param (

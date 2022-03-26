@@ -42,10 +42,10 @@ Created [26/03/2022_15:49] Initial Script Creating
 
 <#
 .SYNOPSIS
-Add an entry in the csv config file.
+Add an entry in the csv file
 
 .DESCRIPTION
-Add an entry in the csv config file.
+Add an entry in the csv file
 
 .PARAMETER PSSysTrayConfigFilePath
 Path to the config file created by New-PSSysTrayConfigFile

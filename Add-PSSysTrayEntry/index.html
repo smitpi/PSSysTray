@@ -12,14 +12,14 @@
         <meta name="author" content="Pierre Smit">
       
       
-        <link rel="canonical" href="https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile/">
+        <link rel="canonical" href="https://smitpi.github.io/PSSysTray/Add-PSSysTrayEntry/">
       
       <link rel="icon" href="..">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.2.5">
     
     
       
-        <title>New-PSSysTrayConfigFile - PSSysTray</title>
+        <title>Add-PSSysTrayEntry - PSSysTray</title>
       
     
     
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#new-pssystrayconfigfile" class="md-skip">
+        <a href="#add-pssystrayentry" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              New-PSSysTrayConfigFile
+              Add-PSSysTrayEntry
             
           </span>
         </div>
@@ -247,21 +247,6 @@
 
   
   
-  
-    <li class="md-nav__item">
-      <a href="../Add-PSSysTrayEntry/" class="md-nav__link">
-        Add-PSSysTrayEntry
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
     
   
   
@@ -274,12 +259,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          New-PSSysTrayConfigFile
+          Add-PSSysTrayEntry
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        New-PSSysTrayConfigFile
+        Add-PSSysTrayEntry
       </a>
       
         
@@ -313,8 +298,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#__allparametersets" class="md-nav__link">
-    __AllParameterSets
+  <a href="#set1-default" class="md-nav__link">
+    Set1 (Default)
   </a>
   
 </li>
@@ -360,29 +345,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-configpath" class="md-nav__link">
-    -ConfigPath
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-confirm" class="md-nav__link">
-    -Confirm
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-createshortcut" class="md-nav__link">
-    -CreateShortcut
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-whatif" class="md-nav__link">
-    -WhatIf
+  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
+    -PSSysTrayConfigFilePath
   </a>
   
 </li>
@@ -417,6 +381,21 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../New-PSSysTrayConfigFile/" class="md-nav__link">
+        New-PSSysTrayConfigFile
+      </a>
     </li>
   
 
@@ -478,8 +457,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#__allparametersets" class="md-nav__link">
-    __AllParameterSets
+  <a href="#set1-default" class="md-nav__link">
+    Set1 (Default)
   </a>
   
 </li>
@@ -525,29 +504,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-configpath" class="md-nav__link">
-    -ConfigPath
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-confirm" class="md-nav__link">
-    -Confirm
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-createshortcut" class="md-nav__link">
-    -CreateShortcut
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-whatif" class="md-nav__link">
-    -WhatIf
+  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
+    -PSSysTrayConfigFilePath
   </a>
   
 </li>
@@ -590,77 +548,35 @@
             <article class="md-content__inner md-typeset">
               
                 
-<a href="https://github.com/smitpi/PSSysTray/edit/master/docs/New-PSSysTrayConfigFile.md" title="Edit this page" class="md-content__button md-icon">
+<a href="https://github.com/smitpi/PSSysTray/edit/master/docs/Add-PSSysTrayEntry.md" title="Edit this page" class="md-content__button md-icon">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
 </a>
 
 
 
-<h1 id="new-pssystrayconfigfile">New-PSSysTrayConfigFile</h1>
+<h1 id="add-pssystrayentry">Add-PSSysTrayEntry</h1>
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>Creates the needed .csv file in the specified folder.</p>
+<p>Add an entry in the csv file</p>
 <h2 id="syntax">SYNTAX</h2>
-<h3 id="__allparametersets">__AllParameterSets</h3>
-<div class="highlight"><pre><span></span><code>New-PSSysTrayConfigFile [[-ConfigPath &lt;DirectoryInfo&gt;]] [-Confirm] [-CreateShortcut] [-WhatIf] [&lt;CommonParameters&gt;]
+<h3 id="set1-default">Set1 (Default)</h3>
+<div class="highlight"><pre><span></span><code>Add-PSSysTrayEntry [-PSSysTrayConfigFilePath] &lt;String&gt; [&lt;CommonParameters&gt;]
 </code></pre></div>
 <h2 id="description">DESCRIPTION</h2>
-<p>Creates the needed .csv file in the specified folder.</p>
+<p>Add an entry in the csv file</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="example-1-example-1">Example 1: EXAMPLE 1</h3>
-<div class="highlight"><pre><span></span><code>New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
+<div class="highlight"><pre><span></span><code>Add-PSSysTrayEntry
 </code></pre></div>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-configpath">-ConfigPath</h3>
-<p>Path to where the config file will be saved.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DirectoryInfo</span><span class="w"></span>
+<h3 id="-pssystrayconfigfilepath">-PSSysTrayConfigFilePath</h3>
+<p>{{ Fill PSSysTrayConfigFilePath Description }}</p>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">String</span><span class="w"></span>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
 <span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span>
 <span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
 
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (All) False (None)</span><span class="w"></span>
 <span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-confirm">-Confirm</h3>
-<p>{{ Fill Confirm Description }}</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cf</span><span class="w"></span>
-<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-createshortcut">-CreateShortcut</h3>
-<p>Create a shortcut to a .ps1 file that will launch the gui.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span>
-<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-whatif">-WhatIf</h3>
-<p>{{ Fill WhatIf Description }}</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wi</span><span class="w"></span>
-<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
 <span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
@@ -684,7 +600,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../Add-PSSysTrayEntry/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Add-PSSysTrayEntry" rel="prev">
+        <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: PSSysTray" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -693,20 +609,20 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Add-PSSysTrayEntry
+              PSSysTray
             </div>
           </div>
         </a>
       
       
         
-        <a href="../Start-PSSysTray/" class="md-footer__link md-footer__link--next" aria-label="Next: Start-PSSysTray" rel="next">
+        <a href="../New-PSSysTrayConfigFile/" class="md-footer__link md-footer__link--next" aria-label="Next: New-PSSysTrayConfigFile" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Start-PSSysTray
+              New-PSSysTrayConfigFile
             </div>
           </div>
           <div class="md-footer__button md-icon">

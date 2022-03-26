@@ -70,29 +70,77 @@ Function Add-PSSysTrayEntry {
         [System.Collections.ArrayList]$config = @()
         $notes = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -like '##*'}
         $config = Get-Content $PSSysTrayConfigFilePath | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
-        $index = 0
-        $mainmenulist = ($config.mainmenu | Get-Unique)
-        $mainmenulist | ForEach-Object {
-            Write-Color "$($index)) ",$_ -Color Yellow,Green
-            $index++
+        function mainmenu {
+            Write-Color "Choose the Main Menu:" -Color DarkRed -StartTab 1 -LinesBefore 2
+            $index = 0
+            $mainmenulist = ($config.mainmenu | Get-Unique)
+            $mainmenulist | ForEach-Object {
+                Write-Color "$($index)) ",$_ -Color Yellow,Green
+                $index++
+            }
+            Write-Color "n)","New Main Menu" -Color Yellow,Green
+            $choose = Read-Host "Answer"
+            if ($choose.ToLower() -like "n"){$MainMenu = Read-Host "New Menu Name"}
+            else {$MainMenu = $mainmenulist[$choose]}
+            $MainMenu
         }
-        Write-Color "n)","New Main Menu" -Color Yellow,Green
-        $choose = Read-Host "Choose main menu"
-        if ($choose.ToLower() -like "n"){$MainMenu = Read-Host "New Menu Name"}
-        else {$MainMenu = $mainmenulist[$choose]}
+        function mode {
+            Write-Color "Choose the mode:" -Color DarkRed -StartTab 1 -LinesBefore 2
+            Write-Color "0) ","PowerShell Script file" -Color Yellow,Green
+            Write-Color "1) ","PowerShell Command" -Color Yellow,Green
+            Write-Color "2) ","Other Executable" -Color Yellow,Green
+            $modechoose = Read-Host "Answer"
+
+            switch ($modechoose)
+            {
+                '0' {$mode = "PSFile"}
+                '1' {$mode = "PSCommand"}
+                '2' {$mode = "Other"}
+            }
+                $mode
+        }
+        function window {
+            Write-Color "Choose the window size:" -Color DarkRed -StartTab 1 -LinesBefore 2
+            Write-Color "0) ","Hidden" -Color Yellow,Green
+            Write-Color "1) ","Maximized" -Color Yellow,Green
+            Write-Color "2) ","Normal" -Color Yellow,Green
+            Write-Color "3) ","Minimized" -Color Yellow,Green
+            $modechoose = Read-Host "Answer" 
+
+            switch ($modechoose)
+            {
+                '0' {$Window = "Hidden"}
+                '1' {$Window = "Maximized"}
+                '2' {$Window = "Normal"}
+                '3' {$Window = "Minimized"}
+            }
+                $Window
+        }
+        function RunAs {
+            Write-Color "Run As Admin:" -Color DarkRed -StartTab 1 -LinesBefore 2
+            Write-Color "0) ","Yes" -Color Yellow,Green
+            Write-Color "1) ","No" -Color Yellow,Green
+            $modechoose = Read-Host "Answer"
+            switch ($modechoose)
+            {
+                '0' {$RunAs = "Yes"}
+                '1' {$RunAs = "No"}
+            }
+                $RunAs
+        }
 
         [void]$config.Add([PSCustomObject]@{
-            MainMenu   = $MainMenu
-            Name       = (Read-Host 'Name')
-            Command    = (Read-Host 'Command')
-            Arguments  = (Read-Host 'Arguments')
-            Mode       = (Read-Host 'Mode')
-            Window     = (Read-Host 'Window')
-            RunAsAdmin = (Read-Host 'RunAsAdmin')
+            MainMenu   = mainmenu
+            Name       = (Read-Host 'New Entry Name')
+            Command    = (Read-Host 'Path to .exe')
+            Arguments  = (Read-Host 'Arguments for executable')
+            Mode       = Mode
+            Window     = window
+            RunAsAdmin = RunAs
          })
 
           Rename-Item $PSSysTrayConfigFilePath -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
           $notes | Out-File -FilePath $PSSysTrayConfigFilePath -NoClobber -Force
-          $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
+          $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFilePath -Append -NoClobber -Force
           Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"""
 } #end Function

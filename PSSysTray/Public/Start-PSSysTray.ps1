@@ -64,14 +64,6 @@ Function Start-PSSysTray {
     )
 
 if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
-      #$rs = [RunspaceFactory]::CreateRunspace()
-      #$rs.ApartmentState = 'STA'
-     # $rs.ThreadOptions = 'ReuseThread'
-      #$rs.Open()
-      #$rs.SessionStateProxy.SetVariable("PSSysTrayConfigFilePath",$PSSysTrayConfigFilePath)
-
-      #$psCmd = [PowerShell]::Create().AddScript({
-    
         #region load assemblies
         Add-Type -Name Window -Namespace Console -MemberDefinition '
     [DllImport("Kernel32.dll")]
@@ -213,8 +205,7 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         $Add_Entry.Text = 'Add Item'
         $Add_Entry.add_Click( {
                 ShowConsole
-                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"" -wait"
-               # 
+                Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFilePath $($PSSysTrayConfigFilePath)}"" -wait"
                 $Systray_Tool_Icon.Visible = $false
                 Stop-Process $pid
                 HideConsole
@@ -238,11 +229,7 @@ if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
         $appContext = New-Object System.Windows.Forms.ApplicationContext
         [void][System.Windows.Forms.Application]::Run($appContext)
         #endregion
-    
-   # })
 
-    # $pscmd.runspace = $rs
-    # [void]$pscmd.BeginInvoke()
     }
 } #end Function
 

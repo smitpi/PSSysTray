@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.12
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -66,7 +66,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.12
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -184,7 +184,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.12
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################

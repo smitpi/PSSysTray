@@ -59,8 +59,7 @@ New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
 Function New-PSSysTrayConfigFile {
 	[Cmdletbinding(SupportsShouldProcess = $true, HelpURI = 'https://smitpi.github.io/PSSysTray/New-PSSysTrayConfigFile')]
 	PARAM(
-		[ValidateScript( { if (Test-Path $_) { $true}
-				else {throw 'Not a valid config file.'} })]
+		[ValidateScript( { (Test-Path $_) })]
 		[System.IO.DirectoryInfo]$ConfigPath,
 		[switch]$CreateShortcut = $false
 	)
@@ -84,7 +83,7 @@ Function New-PSSysTrayConfigFile {
 	}
 	$export += [PSCustomObject]@{
 		MainMenu   = 'Level2'
-		Name       = 'TempCommand'
+		Name       = 'TempScript'
 		Command    = 'Powershell.exe'
 		Arguments  = 'get-command'
 		Mode       = 'PSCommand'
@@ -122,7 +121,7 @@ Function New-PSSysTrayConfigFile {
 
 			$string = @"
 `$PRModule = Get-ChildItem `"$((Join-Path ((Get-Item $module.ModuleBase).Parent).FullName "\*\$($module.name).psm1"))`" | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
-Import-Module `$PRModule.fullname -Force
+import-module `$PRModule.fullname -Force
 Start-PSSysTray -PSSysTrayConfigFile $((Join-Path $ConfigPath -ChildPath \PSSysTrayConfig.csv -Resolve))
 "@
 

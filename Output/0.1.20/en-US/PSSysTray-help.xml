@@ -6,11 +6,11 @@
       <command:verb>Add</command:verb>
       <command:noun>PSSysTrayEntry</command:noun>
       <maml:description>
-        <maml:para>Add an entry in the csv file</maml:para>
+        <maml:para>Add an entry in the csv config file.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Add an entry in the csv file</maml:para>
+      <maml:para>Add an entry in the csv config file.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -53,7 +53,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv</dev:code>
+        <dev:code>An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

@@ -50,9 +50,6 @@ Add an entry in the csv config file.
 .PARAMETER PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Execute
-Start the tool after adding the configuration.
-
 .EXAMPLE
 An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 
@@ -69,16 +66,14 @@ Function Add-PSSysTrayEntry {
 
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    $script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
 
-    $again = 'y'
-    do {
-        Clear-Host
+    function mainmenu {
         Write-Color 'Choose the Main Menu:' -Color DarkRed -StartTab 1 -LinesBefore 2
         $index = 0
 
         [System.Collections.ArrayList]$mainmenulist = @()
-        $config.mainmenu | ForEach-Object {if ($_ -notin $mainmenulist) {[void]$mainmenulist.Add($_)}}
+        $config.mainmenu | ForEach-Object {if ($_ -notin $NewConfig) {$ $mainmenulist.Add($_)}}
 
         $mainmenulist | ForEach-Object {
             Write-Color "$($index)) ", $_ -Color Yellow, Green
@@ -88,10 +83,9 @@ Function Add-PSSysTrayEntry {
         $choose = Read-Host 'Answer'
         if ($choose.ToLower() -like 'n') {$MainMenu = Read-Host 'New Menu Name'}
         else {$MainMenu = $mainmenulist[$choose]}
-
-        Write-Color 'The new item name:' -Color DarkRed -StartTab 1 -LinesBefore 2
-        $name = Read-Host 'Answer'
-
+        $MainMenu
+    }
+    function mode {
         Write-Color 'Choose the mode:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'PowerShell Script file' -Color Yellow, Green
         Write-Color '1) ', 'PowerShell Command' -Color Yellow, Green
@@ -116,12 +110,13 @@ Function Add-PSSysTrayEntry {
                 $arguments = Read-Host 'Arguments for the executable'
             }
         }
-        $cmd = [PSCustomObject]@{
+        [PSCustomObject]@{
             mode      = $mode
             command   = $command
             arguments = $arguments
         }
-
+    }
+    function window {
         Write-Color 'Choose the window size:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Hidden' -Color Yellow, Green
         Write-Color '1) ', 'Maximized' -Color Yellow, Green
@@ -135,7 +130,9 @@ Function Add-PSSysTrayEntry {
             '2' {$Window = 'Normal'}
             '3' {$Window = 'Minimized'}
         }
-
+        $Window
+    }
+    function RunAs {
         Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Yes' -Color Yellow, Green
         Write-Color '1) ', 'No' -Color Yellow, Green
@@ -144,6 +141,18 @@ Function Add-PSSysTrayEntry {
             '0' {$RunAs = 'Yes'}
             '1' {$RunAs = 'No'}
         }
+        $RunAs
+    }
+
+    $again = 'y'
+    do {
+
+        $mainmenu = mainmenu
+        Write-Color 'The new item name:' -Color DarkRed -StartTab 1 -LinesBefore 2
+        $name = Read-Host 'Answer'
+        $cmd = mode
+        $Window = Window
+        $RunAs = RunAs
 
         [void]$config.Add([PSCustomObject]@{
                 MainMenu   = $mainmenu
@@ -154,6 +163,7 @@ Function Add-PSSysTrayEntry {
                 Window     = $Window
                 RunAsAdmin = $RunAs
             })
+
 
         $again = Read-Host 'Add More entries (y/n)'
     } while ($again.ToLower() -notlike 'n')

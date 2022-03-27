@@ -50,9 +50,6 @@ Add an entry in the csv config file.
 .PARAMETER PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Execute
-Start the tool after adding the configuration.
-
 .EXAMPLE
 An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 
@@ -62,24 +59,18 @@ Function Add-PSSysTrayEntry {
     Param (
         [Parameter(Mandatory = $true)]
         [ValidateScript( { if ((Test-Path $_) -and ((Get-Item $_).Extension -eq '.csv')) { $true}
-                else {throw 'Not a valid config file.'} })]
+                            else {throw "Not a valid config file."} })]
         [System.IO.FileInfo]$PSSysTrayConfigFile,
         [switch]$Execute = $false
     )
 
-    [System.Collections.ArrayList]$config = @()
-    $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
 
-    $again = 'y'
-    do {
-        Clear-Host
+    
+    Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+    function mainmenu {
         Write-Color 'Choose the Main Menu:' -Color DarkRed -StartTab 1 -LinesBefore 2
         $index = 0
-
-        [System.Collections.ArrayList]$mainmenulist = @()
-        $config.mainmenu | ForEach-Object {if ($_ -notin $mainmenulist) {[void]$mainmenulist.Add($_)}}
-
+        $mainmenulist = ($config.mainmenu | Get-Unique)
         $mainmenulist | ForEach-Object {
             Write-Color "$($index)) ", $_ -Color Yellow, Green
             $index++
@@ -88,10 +79,9 @@ Function Add-PSSysTrayEntry {
         $choose = Read-Host 'Answer'
         if ($choose.ToLower() -like 'n') {$MainMenu = Read-Host 'New Menu Name'}
         else {$MainMenu = $mainmenulist[$choose]}
-
-        Write-Color 'The new item name:' -Color DarkRed -StartTab 1 -LinesBefore 2
-        $name = Read-Host 'Answer'
-
+        $MainMenu
+    }
+    function mode {
         Write-Color 'Choose the mode:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'PowerShell Script file' -Color Yellow, Green
         Write-Color '1) ', 'PowerShell Command' -Color Yellow, Green
@@ -102,26 +92,25 @@ Function Add-PSSysTrayEntry {
             '0' {
                 $mode = 'PSFile'
                 $command = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-                $arguments = Read-Host 'Path to .ps1 file'
+                $arguments = read-host "Path to .ps1 file"
             }
-            '1' {
-                $mode = 'PSCommand'
+            '1' {$mode = 'PSCommand'
                 $command = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
                 $arguments = Read-Host 'PowerShell command or scriptblock'
 
             }
-            '2' {
-                $mode = 'Other'
-                $command = Read-Host 'Path to executable'
-                $arguments = Read-Host 'Arguments for the executable'
-            }
+            '2' {$mode = 'Other'
+                $command = Read-Host "Path to executable"
+                $arguments = Read-Host "Arguments for the executable"
+                }
         }
-        $cmd = [PSCustomObject]@{
-            mode      = $mode
-            command   = $command
+        [PSCustomObject]@{
+            mode = $mode
+            command = $command
             arguments = $arguments
         }
-
+    }
+    function window {
         Write-Color 'Choose the window size:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Hidden' -Color Yellow, Green
         Write-Color '1) ', 'Maximized' -Color Yellow, Green
@@ -135,7 +124,9 @@ Function Add-PSSysTrayEntry {
             '2' {$Window = 'Normal'}
             '3' {$Window = 'Minimized'}
         }
-
+        $Window
+    }
+    function RunAs {
         Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Yes' -Color Yellow, Green
         Write-Color '1) ', 'No' -Color Yellow, Green
@@ -144,26 +135,42 @@ Function Add-PSSysTrayEntry {
             '0' {$RunAs = 'Yes'}
             '1' {$RunAs = 'No'}
         }
+        $RunAs
+    }
 
-        [void]$config.Add([PSCustomObject]@{
-                MainMenu   = $mainmenu
-                Name       = $name
-                Command    = $cmd.command
-                Arguments  = $cmd.arguments
-                Mode       = $cmd.mode
-                Window     = $Window
-                RunAsAdmin = $RunAs
-            })
+$again = 'y'
+do {
+        [System.Collections.ArrayList]$config = @()
+        [System.Collections.ArrayList]$NewConfig = @()
+        $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
+        $script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
 
-        $again = Read-Host 'Add More entries (y/n)'
-    } while ($again.ToLower() -notlike 'n')
+    $mainmenu = mainmenu
+    Write-Color 'The new item name:' -Color DarkRed -StartTab 1 -LinesBefore 2
+    $name = Read-Host 'Answer'
+    $cmd = mode
+    $Window = window
+    $RunAs = RunAs
 
-    Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
-    $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
-    $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
+    [void]$config.Add([PSCustomObject]@{
+            MainMenu   = $mainmenu
+            Name       = $name
+            Command    = $cmd.command
+            Arguments  = $cmd.arguments
+            Mode       = $cmd.mode
+            Window     = $Window
+            RunAsAdmin = $RunAs
+        })
+
+        $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
+        $config | Get-Unique - | ForEach-Object {[void]$NewConfig.Add($config.Where($_.name -like $_))}
+        $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
+
+        $again = Read-Host "Add More entries (y/n)"
+    } while ($again.ToLower() -notlike "n")
 
 
     if ($Execute) {
-        Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFile $($PSSysTrayConfigFile)}"""
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFile $($PSSysTrayConfigFile)}"""
     }
 } #end Function

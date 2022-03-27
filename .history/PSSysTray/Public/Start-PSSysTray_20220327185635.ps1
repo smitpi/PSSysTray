@@ -63,7 +63,7 @@ Function Start-PSSysTray {
                 else {throw 'Not a valid config file.'} })]
         [System.IO.FileInfo]$PSSysTrayConfigFile
     )
-
+    
     #region load assemblies
     Add-Type -Name Window -Namespace Console -MemberDefinition '
     [DllImport("Kernel32.dll")]

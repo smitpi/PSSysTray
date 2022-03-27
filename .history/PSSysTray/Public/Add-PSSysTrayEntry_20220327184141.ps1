@@ -50,9 +50,6 @@ Add an entry in the csv config file.
 .PARAMETER PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Execute
-Start the tool after adding the configuration.
-
 .EXAMPLE
 An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 
@@ -69,11 +66,10 @@ Function Add-PSSysTrayEntry {
 
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    $script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
 
     $again = 'y'
     do {
-        Clear-Host
         Write-Color 'Choose the Main Menu:' -Color DarkRed -StartTab 1 -LinesBefore 2
         $index = 0
 

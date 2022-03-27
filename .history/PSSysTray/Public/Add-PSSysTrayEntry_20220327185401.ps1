@@ -50,8 +50,7 @@ Add an entry in the csv config file.
 .PARAMETER PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Execute
-Start the tool after adding the configuration.
+
 
 .EXAMPLE
 An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv

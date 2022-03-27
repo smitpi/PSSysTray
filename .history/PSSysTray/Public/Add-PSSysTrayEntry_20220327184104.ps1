@@ -50,9 +50,6 @@ Add an entry in the csv config file.
 .PARAMETER PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
-.PARAMETER Execute
-Start the tool after adding the configuration.
-
 .EXAMPLE
 An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 
@@ -69,11 +66,10 @@ Function Add-PSSysTrayEntry {
 
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    $script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
 
     $again = 'y'
     do {
-        Clear-Host
         Write-Color 'Choose the Main Menu:' -Color DarkRed -StartTab 1 -LinesBefore 2
         $index = 0
 
@@ -135,7 +131,8 @@ Function Add-PSSysTrayEntry {
             '2' {$Window = 'Normal'}
             '3' {$Window = 'Minimized'}
         }
-
+        
+   
         Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Yes' -Color Yellow, Green
         Write-Color '1) ', 'No' -Color Yellow, Green
@@ -144,6 +141,13 @@ Function Add-PSSysTrayEntry {
             '0' {$RunAs = 'Yes'}
             '1' {$RunAs = 'No'}
         }
+        
+
+        $mainmenu = mainmenu
+
+        $cmd = mode
+        $Window = Window
+        $RunAs = RunAs
 
         [void]$config.Add([PSCustomObject]@{
                 MainMenu   = $mainmenu
@@ -154,6 +158,7 @@ Function Add-PSSysTrayEntry {
                 Window     = $Window
                 RunAsAdmin = $RunAs
             })
+
 
         $again = Read-Host 'Add More entries (y/n)'
     } while ($again.ToLower() -notlike 'n')

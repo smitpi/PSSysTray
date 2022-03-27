@@ -84,7 +84,7 @@ Function New-PSSysTrayConfigFile {
 	}
 	$export += [PSCustomObject]@{
 		MainMenu   = 'Level2'
-		Name       = 'TempCommand'
+		Name       = 'TempScript'
 		Command    = 'Powershell.exe'
 		Arguments  = 'get-command'
 		Mode       = 'PSCommand'

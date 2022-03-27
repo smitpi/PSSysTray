@@ -8,7 +8,7 @@ schema: 2.0.0
 # Add-PSSysTrayEntry
 
 ## SYNOPSIS
-Add an entry in the csv file
+Add an entry in the csv config file.
 
 ## SYNTAX
 
@@ -17,13 +17,13 @@ Add-PSSysTrayEntry [-PSSysTrayConfigFilePath] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Add an entry in the csv file
+Add an entry in the csv config file.
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 ```
 
 ## PARAMETERS

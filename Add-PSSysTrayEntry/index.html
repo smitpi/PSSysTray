@@ -294,19 +294,6 @@
     SYNTAX
   </a>
   
-    <nav class="md-nav" aria-label="SYNTAX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#__allparametersets" class="md-nav__link">
-    __AllParameterSets
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -325,8 +312,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-1-example-1" class="md-nav__link">
-    Example 1: EXAMPLE 1
+  <a href="#example-1" class="md-nav__link">
+    EXAMPLE 1
   </a>
   
 </li>
@@ -345,15 +332,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-execute" class="md-nav__link">
-    -Execute
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-pssystrayconfigfile" class="md-nav__link">
-    -PSSysTrayConfigFile
+  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
+    -PSSysTrayConfigFilePath
   </a>
   
 </li>
@@ -367,6 +347,20 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    INPUTS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    OUTPUTS
+  </a>
   
 </li>
       
@@ -460,19 +454,6 @@
     SYNTAX
   </a>
   
-    <nav class="md-nav" aria-label="SYNTAX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#__allparametersets" class="md-nav__link">
-    __AllParameterSets
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -491,8 +472,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#example-1-example-1" class="md-nav__link">
-    Example 1: EXAMPLE 1
+  <a href="#example-1" class="md-nav__link">
+    EXAMPLE 1
   </a>
   
 </li>
@@ -511,15 +492,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-execute" class="md-nav__link">
-    -Execute
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-pssystrayconfigfile" class="md-nav__link">
-    -PSSysTrayConfigFile
+  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
+    -PSSysTrayConfigFilePath
   </a>
   
 </li>
@@ -533,6 +507,20 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    INPUTS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    OUTPUTS
+  </a>
   
 </li>
       
@@ -572,49 +560,33 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>Add an entry in the csv config file.</p>
 <h2 id="syntax">SYNTAX</h2>
-<h3 id="__allparametersets">__AllParameterSets</h3>
-<div class="highlight"><pre><span></span><code>Add-PSSysTrayEntry [-PSSysTrayConfigFile] &lt;FileInfo&gt; [-Execute] [&lt;CommonParameters&gt;]
+<div class="highlight"><pre><span></span><code>Add-PSSysTrayEntry [-PSSysTrayConfigFilePath] &lt;String&gt; [&lt;CommonParameters&gt;]
 </code></pre></div>
 <h2 id="description">DESCRIPTION</h2>
 <p>Add an entry in the csv config file.</p>
 <h2 id="examples">EXAMPLES</h2>
-<h3 id="example-1-example-1">Example 1: EXAMPLE 1</h3>
-<div class="highlight"><pre><span></span><code>An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
+<h3 id="example-1">EXAMPLE 1</h3>
+<div class="highlight"><pre><span></span><code>An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
 </code></pre></div>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-execute">-Execute</h3>
-<p>Start the tool after adding the configuration.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span>
-<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (None) False (All)</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-pssystrayconfigfile">-PSSysTrayConfigFile</h3>
+<h3 id="-pssystrayconfigfilepath">-PSSysTrayConfigFilePath</h3>
 <p>Path to the config file created by New-PSSysTrayConfigFile</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FileInfo</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">String</span><span class="w"></span>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span>
-<span class="nt">Accepted values</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">Aliases</span><span class="p">:</span><span class="w"></span>
 
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True (All) False (None)</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span>
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"></span>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">DontShow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 </code></pre></div>
 <h3 id="commonparameters">CommonParameters</h3>
 <p>This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=113216">about_CommonParameters</a>.</p>
+<h2 id="inputs">INPUTS</h2>
+<h2 id="outputs">OUTPUTS</h2>
 <h2 id="notes">NOTES</h2>
 <h2 id="related-links">RELATED LINKS</h2>
-<p>Fill Related Links Here</p>
 
               
             </article>

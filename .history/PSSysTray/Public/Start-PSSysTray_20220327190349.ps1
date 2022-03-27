@@ -190,7 +190,7 @@ Function Start-PSSysTray {
     #region process csv file
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
+    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
     foreach ($main in ($config.mainmenu | Get-Unique -AsString)) {
         $tmpmenu = NMainMenu -Text $main
         $record = $config | Where-Object { $_.Mainmenu -like $main }

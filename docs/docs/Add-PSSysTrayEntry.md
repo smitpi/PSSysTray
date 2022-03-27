@@ -13,7 +13,7 @@ Add an entry in the csv config file.
 ## SYNTAX
 
 ```
-Add-PSSysTrayEntry [-PSSysTrayConfigFilePath] <String> [<CommonParameters>]
+Add-PSSysTrayEntry [-PSSysTrayConfigFile] <FileInfo> [-Execute] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,22 +23,37 @@ Add an entry in the csv config file.
 
 ### EXAMPLE 1
 ```
-An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 ```
 
 ## PARAMETERS
 
-### -PSSysTrayConfigFilePath
+### -PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
 ```yaml
-Type: String
+Type: FileInfo
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 1
 Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Execute
+Start the tool after adding the configuration.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

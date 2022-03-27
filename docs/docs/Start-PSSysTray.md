@@ -13,7 +13,7 @@ This function reads csv config file and creates the gui in your system tray.
 ## SYNTAX
 
 ```
-Start-PSSysTray [-PSSysTrayConfigFilePath] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
+Start-PSSysTray [-PSSysTrayConfigFile] <FileInfo> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -23,52 +23,21 @@ This function reads csv config file and creates the gui in your system tray.
 
 ### EXAMPLE 1
 ```
-Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+Start-PSSysTray -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 ```
 
 ## PARAMETERS
 
-### -PSSysTrayConfigFilePath
+### -PSSysTrayConfigFile
 Path to the config file created by New-PSSysTrayConfigFile
 
 ```yaml
-Type: String
+Type: FileInfo
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -WhatIf
-Shows what would happen if the cmdlet runs.
-The cmdlet is not run.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: wi
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
-Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

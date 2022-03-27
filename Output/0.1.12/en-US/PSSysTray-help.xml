@@ -16,31 +16,54 @@
       <command:syntaxItem>
         <maml:name>Add-PSSysTrayEntry</maml:name>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>PSSysTrayConfigFilePath</maml:name>
+          <maml:name>PSSysTrayConfigFile</maml:name>
           <maml:description>
             <maml:para>Path to the config file created by New-PSSysTrayConfigFile</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>FileInfo</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Execute</maml:name>
+          <maml:description>
+            <maml:para>Start the tool after adding the configuration.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>PSSysTrayConfigFilePath</maml:name>
+        <maml:name>PSSysTrayConfigFile</maml:name>
         <maml:description>
           <maml:para>Path to the config file created by New-PSSysTrayConfigFile</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>FileInfo</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Execute</maml:name>
+        <maml:description>
+          <maml:para>Start the tool after adding the configuration.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -53,7 +76,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>An Add-PSSysTrayEntry -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv</dev:code>
+        <dev:code>An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>
@@ -207,77 +230,31 @@
       <command:syntaxItem>
         <maml:name>Start-PSSysTray</maml:name>
         <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-          <maml:name>PSSysTrayConfigFilePath</maml:name>
+          <maml:name>PSSysTrayConfigFile</maml:name>
           <maml:description>
             <maml:para>Path to the config file created by New-PSSysTrayConfigFile</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>FileInfo</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi">
-          <maml:name>WhatIf</maml:name>
-          <maml:description>
-            <maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.</maml:para>
-          </maml:description>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>False</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf">
-          <maml:name>Confirm</maml:name>
-          <maml:description>
-            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
-          </maml:description>
-          <dev:type>
-            <maml:name>SwitchParameter</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
       <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
-        <maml:name>PSSysTrayConfigFilePath</maml:name>
+        <maml:name>PSSysTrayConfigFile</maml:name>
         <maml:description>
           <maml:para>Path to the config file created by New-PSSysTrayConfigFile</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">FileInfo</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>FileInfo</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="wi">
-        <maml:name>WhatIf</maml:name>
-        <maml:description>
-          <maml:para>Shows what would happen if the cmdlet runs. The cmdlet is not run.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>False</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="cf">
-        <maml:name>Confirm</maml:name>
-        <maml:description>
-          <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
-        </maml:description>
-        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-        <dev:type>
-          <maml:name>SwitchParameter</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -290,7 +267,7 @@
     <command:examples>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
-        <dev:code>Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv</dev:code>
+        <dev:code>Start-PSSysTray -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv</dev:code>
         <dev:remarks>
           <maml:para></maml:para>
         </dev:remarks>

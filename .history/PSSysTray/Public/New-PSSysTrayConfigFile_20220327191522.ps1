@@ -107,7 +107,7 @@ Function New-PSSysTrayConfigFile {
 		if (-not($check)) {
 			Write-Output 'Config File does not exit, creating default settings.'
 			$notes | Out-File -FilePath $Configfile -NoClobber -NoNewline
-			$Export | ConvertTo-Csv -Delimiter '~' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$Export | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
 		} else {
 			Write-Warning 'File exists, renaming file now'
 			Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"

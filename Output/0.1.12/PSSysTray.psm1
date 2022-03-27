@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.20
+# version: 0.1.12
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -39,7 +39,7 @@ Function Add-PSSysTrayEntry {
 
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
 
     $again = 'y'
     do {
@@ -130,7 +130,7 @@ Function Add-PSSysTrayEntry {
 
     Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
     $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
-    $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
+    $config | ConvertTo-Csv -Delimiter '~' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
 
 
     if ($Execute) {
@@ -145,7 +145,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.20
+# version: 0.1.12
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -218,12 +218,12 @@ Function New-PSSysTrayConfigFile {
 		if (-not($check)) {
 			Write-Output 'Config File does not exit, creating default settings.'
 			$notes | Out-File -FilePath $Configfile -NoClobber -NoNewline
-			$Export | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$Export | ConvertTo-Csv -Delimiter '~' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
 		} else {
 			Write-Warning 'File exists, renaming file now'
 			Rename-Item $Configfile -NewName "PSSysTrayConfig_$(Get-Date -Format ddMMyyyy_HHmm).csv"
 			$notes | Out-File -FilePath $Configfile -NoClobber
-			$Export | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
+			$Export | ConvertTo-Csv -Delimiter '~' -NoTypeInformation | Out-File -FilePath $Configfile -Append -NoClobber
 		}
 
 		if ($CreateShortcut) {
@@ -264,7 +264,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.20
+# version: 0.1.12
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -418,7 +418,7 @@ Function Start-PSSysTray {
     #region process csv file
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
-    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter ';'
+    $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
     foreach ($main in ($config.mainmenu | Get-Unique -AsString)) {
         $tmpmenu = NMainMenu -Text $main
         $record = $config | Where-Object { $_.Mainmenu -like $main }
@@ -436,7 +436,7 @@ Function Start-PSSysTray {
     $Add_Entry.Text = 'Add Item'
     $Add_Entry.add_Click( {
             ShowConsole
-            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFile $($PSSysTrayConfigFile)}"" -wait"
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFile $($PSSysTrayConfigFile)} -Execute"" -wait"
             $Systray_Tool_Icon.Visible = $false
             Stop-Process $pid
             HideConsole

@@ -160,7 +160,7 @@ Function Add-PSSysTrayEntry {
 
     Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
     $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
-    $config | ConvertTo-Csv -Delimiter '~' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
+    $config | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
 
 
     if ($Execute) {

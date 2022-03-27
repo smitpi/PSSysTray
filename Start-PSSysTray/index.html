@@ -362,22 +362,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
-    -PSSysTrayConfigFilePath
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-whatif" class="md-nav__link">
-    -WhatIf
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-confirm" class="md-nav__link">
-    -Confirm
+  <a href="#-pssystrayconfigfile" class="md-nav__link">
+    -PSSysTrayConfigFile
   </a>
   
 </li>
@@ -506,22 +492,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#-pssystrayconfigfilepath" class="md-nav__link">
-    -PSSysTrayConfigFilePath
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-whatif" class="md-nav__link">
-    -WhatIf
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#-confirm" class="md-nav__link">
-    -Confirm
+  <a href="#-pssystrayconfigfile" class="md-nav__link">
+    -PSSysTrayConfigFile
   </a>
   
 </li>
@@ -588,48 +560,23 @@
 <h2 id="synopsis">SYNOPSIS</h2>
 <p>This function reads csv config file and creates the gui in your system tray.</p>
 <h2 id="syntax">SYNTAX</h2>
-<div class="highlight"><pre><span></span><code>Start-PSSysTray [-PSSysTrayConfigFilePath] &lt;String&gt; [-WhatIf] [-Confirm] [&lt;CommonParameters&gt;]
+<div class="highlight"><pre><span></span><code>Start-PSSysTray [-PSSysTrayConfigFile] &lt;FileInfo&gt; [&lt;CommonParameters&gt;]
 </code></pre></div>
 <h2 id="description">DESCRIPTION</h2>
 <p>This function reads csv config file and creates the gui in your system tray.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="example-1">EXAMPLE 1</h3>
-<div class="highlight"><pre><span></span><code>Start-PSSysTray -PSSysTrayConfigFilePath C:\temp\PSSysTrayConfig.csv
+<div class="highlight"><pre><span></span><code>Start-PSSysTray -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 </code></pre></div>
 <h2 id="parameters">PARAMETERS</h2>
-<h3 id="-pssystrayconfigfilepath">-PSSysTrayConfigFilePath</h3>
+<h3 id="-pssystrayconfigfile">-PSSysTrayConfigFile</h3>
 <p>Path to the config file created by New-PSSysTrayConfigFile</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">String</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FileInfo</span><span class="w"></span>
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
 <span class="nt">Aliases</span><span class="p">:</span><span class="w"></span>
 
 <span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
 <span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"></span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-whatif">-WhatIf</h3>
-<p>Shows what would happen if the cmdlet runs.
-The cmdlet is not run.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">wi</span><span class="w"></span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
-<span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"></span>
-<span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-</code></pre></div>
-<h3 id="-confirm">-Confirm</h3>
-<p>Prompts you for confirmation before running the cmdlet.</p>
-<div class="highlight"><pre><span></span><code><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SwitchParameter</span><span class="w"></span>
-<span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
-<span class="nt">Aliases</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cf</span><span class="w"></span>
-
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Named</span><span class="w"></span>
 <span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"></span>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">Accept wildcard characters</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>

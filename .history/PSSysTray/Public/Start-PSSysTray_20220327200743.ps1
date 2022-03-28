@@ -205,15 +205,14 @@ Function Start-PSSysTray {
     $line.Text = '___________________________'
     $line.add_click({
             Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile -WindowStyle Hidden -ExecutionPolicy bypass -command ""& {Start-PSSysTray -PSSysTrayConfigFile $($PSSysTrayConfigFile)}"""
-            $Systray_Tool_Icon.Visible = $false
-            Stop-Process $pid
+
     })
     $Systray_Tool_Icon.contextMenu.MenuItems.AddRange($line)
     $Add_Entry = New-Object System.Windows.Forms.MenuItem
     $Add_Entry.Text = 'Add Item'
     $Add_Entry.add_Click( {
             ShowConsole
-            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFile $($PSSysTrayConfigFile) -Execute }"" -wait"
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Add-PSSysTrayEntry -PSSysTrayConfigFile $($PSSysTrayConfigFile)} -Execute"" -wait"
             $Systray_Tool_Icon.Visible = $false
             Stop-Process $pid
             HideConsole

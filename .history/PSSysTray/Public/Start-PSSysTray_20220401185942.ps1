@@ -90,7 +90,7 @@ Function Start-PSSysTray {
     # Create object for the systray
     $Systray_Tool_Icon = New-Object System.Windows.Forms.NotifyIcon
     # Text displayed when you pass the mouse over the systray icon
-    $Systray_Tool_Icon.Text = "PSSysTray Utils (Ver:$($module.Version))"
+    $Systray_Tool_Icon.Text = "PSSysTray Utils Ver$($module.Version)"
     # Systray icon
     $Systray_Tool_Icon.Icon = $icon
     $Systray_Tool_Icon.Visible = $true

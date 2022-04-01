@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -157,7 +157,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -276,7 +276,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -330,7 +330,7 @@ Function Start-PSSysTray {
     # Create object for the systray
     $Systray_Tool_Icon = New-Object System.Windows.Forms.NotifyIcon
     # Text displayed when you pass the mouse over the systray icon
-    $Systray_Tool_Icon.Text = 'PSSysTray Utils'
+    $Systray_Tool_Icon.Text = "PSSysTray Utils (Ver:$($module.Version))"
     # Systray icon
     $Systray_Tool_Icon.Icon = $icon
     $Systray_Tool_Icon.Visible = $true

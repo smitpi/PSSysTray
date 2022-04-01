@@ -144,8 +144,8 @@ Function Add-PSSysTrayEntry {
             '0' {$RunAs = 'Yes'}
             '1' {$RunAs = 'No'}
         }
-        if ($mainmenu -in $config.mainmenu) {
-        $config.Insert(($config.MainMenu.IndexOf("$mainmenu")),[PSCustomObject]@{
+        $config.insert
+        [void]$config.Add([PSCustomObject]@{
                 MainMenu   = $mainmenu
                 Name       = $name
                 Command    = $cmd.command
@@ -154,18 +154,7 @@ Function Add-PSSysTrayEntry {
                 Window     = $Window
                 RunAsAdmin = $RunAs
             })
-        }
-        else {
-            $config.Add([PSCustomObject]@{
-                    MainMenu   = $mainmenu
-                    Name       = $name
-                    Command    = $cmd.command
-                    Arguments  = $cmd.arguments
-                    Mode       = $cmd.mode
-                    Window     = $Window
-                    RunAsAdmin = $RunAs
-                })
-        }
+
         $again = Read-Host 'Add More entries (y/n)'
     } while ($again.ToLower() -notlike 'n')
 

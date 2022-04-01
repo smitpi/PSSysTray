@@ -166,6 +166,7 @@ Function Add-PSSysTrayEntry {
                     RunAsAdmin = $RunAs
                 })
         }
+
         $again = Read-Host 'Add More entries (y/n)'
     } while ($again.ToLower() -notlike 'n')
 

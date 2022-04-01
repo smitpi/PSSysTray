@@ -5,7 +5,7 @@
 ############################################
 # source: Add-PSSysTrayEntry.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -114,8 +114,8 @@ Function Add-PSSysTrayEntry {
             '0' {$RunAs = 'Yes'}
             '1' {$RunAs = 'No'}
         }
-
-        [void]$config.Add([PSCustomObject]@{
+        if ($mainmenu -in $config.mainmenu) {
+        $config.Insert(($config.MainMenu.IndexOf("$mainmenu")),[PSCustomObject]@{
                 MainMenu   = $mainmenu
                 Name       = $name
                 Command    = $cmd.command
@@ -124,7 +124,18 @@ Function Add-PSSysTrayEntry {
                 Window     = $Window
                 RunAsAdmin = $RunAs
             })
-
+        }
+        else {
+            $config.Add([PSCustomObject]@{
+                    MainMenu   = $mainmenu
+                    Name       = $name
+                    Command    = $cmd.command
+                    Arguments  = $cmd.arguments
+                    Mode       = $cmd.mode
+                    Window     = $Window
+                    RunAsAdmin = $RunAs
+                })
+        }
         $again = Read-Host 'Add More entries (y/n)'
     } while ($again.ToLower() -notlike 'n')
 
@@ -145,7 +156,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ############################################
 # source: New-PSSysTrayConfigFile.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -264,7 +275,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ############################################
 # source: Start-PSSysTray.ps1
 # Module: PSSysTray
-# version: 0.1.14
+# version: 0.1.13
 # Author: Pierre Smit
 # Company: HTPCZA Tech
 #############################################
@@ -326,27 +337,6 @@ Function Start-PSSysTray {
     $Systray_Tool_Icon.ContextMenu = $contextmenu
     #endregion
     #region functions
-    function AddEntry {
-        $more = 'y'
-        do {
-            Clear-Host
-            Write-Host 'Fill in the following:'
-            [void]$config.Add([PSCustomObject]@{
-                    MainMenu   = (Read-Host 'MainMenu')
-                    Name       = (Read-Host 'Name')
-                    Command    = (Read-Host 'Command')
-                    Arguments  = (Read-Host 'Arguments')
-                    Mode       = (Read-Host 'Mode')
-                    Window     = (Read-Host 'Window')
-                    RunAsAdmin = (Read-Host 'RunAsAdmin')
-                })
-            $more = Read-Host 'Add another entry (y\n)'
-        } while ($more.ToLower() -notlike 'n')
-        Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
-        $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
-        $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
-
-    }
     Function Invoke-Action {
         Param (
             [string]$command,
@@ -419,7 +409,7 @@ Function Start-PSSysTray {
     [System.Collections.ArrayList]$config = @()
     $notes = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -like '##*'}
     $config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
-    foreach ($main in ($config.mainmenu | Get-Unique -AsString)) {
+    foreach ($main in ($config.mainmenu | Get-Unique  -AsString)) {
         $tmpmenu = NMainMenu -Text $main
         $record = $config | Where-Object { $_.Mainmenu -like $main }
         foreach ($rec in $record) {

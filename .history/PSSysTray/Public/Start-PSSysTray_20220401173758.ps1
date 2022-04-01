@@ -98,6 +98,27 @@ Function Start-PSSysTray {
     $Systray_Tool_Icon.ContextMenu = $contextmenu
     #endregion
     #region functions
+    function AddEntry {
+        $more = 'y'
+        do {
+            Clear-Host
+            Write-Host 'Fill in the following:'
+            [void]$config.Add([PSCustomObject]@{
+                    MainMenu   = (Read-Host 'MainMenu')
+                    Name       = (Read-Host 'Name')
+                    Command    = (Read-Host 'Command')
+                    Arguments  = (Read-Host 'Arguments')
+                    Mode       = (Read-Host 'Mode')
+                    Window     = (Read-Host 'Window')
+                    RunAsAdmin = (Read-Host 'RunAsAdmin')
+                })
+            $more = Read-Host 'Add another entry (y\n)'
+        } while ($more.ToLower() -notlike 'n')
+        Rename-Item $PSSysTrayConfigFile -NewName "PSSysTrayConfig-addentry-$(Get-Date -Format yyyy.MM.dd_HH.mm).csv" -Force
+        $notes | Out-File -FilePath $PSSysTrayConfigFile -NoClobber -Force
+        $config | Sort-Object -Property MainMenu | ConvertTo-Csv -Delimiter ';' -NoTypeInformation | Out-File -FilePath $PSSysTrayConfigFile -Append -NoClobber -Force
+
+    }
     Function Invoke-Action {
         Param (
             [string]$command,

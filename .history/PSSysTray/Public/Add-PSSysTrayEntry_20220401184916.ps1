@@ -145,8 +145,8 @@ Function Add-PSSysTrayEntry {
             '1' {$RunAs = 'No'}
         }
         if ($mainmenu -in $config.mainmenu) {
-            $count = ($config.mainmenu | Where-Object {$_ -like $mainmenu}).count
-            $config.Insert(($config.MainMenu.IndexOf("$mainmenu") + $count),[PSCustomObject]@{
+            $count = $config.mainmenu | Where-Object {$_ -like $mainmenu}
+        $config.Insert(($config.MainMenu.IndexOf("$mainmenu")),[PSCustomObject]@{
                 MainMenu   = $mainmenu
                 Name       = $name
                 Command    = $cmd.command

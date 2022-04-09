@@ -133,12 +133,11 @@ Function Start-PSSysTray {
         Write-Color 'RunAsAdmin: ', $RunAsAdmin -Color Cyan, Green -ShowTime -LinesAfter 2
         try {
             Start-Process @processArguments
-            Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text
             [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
         }
-        HideConsole
+
     }
     function ShowConsole {
         $PSConsole = [Console.Window]::GetConsoleWindow()

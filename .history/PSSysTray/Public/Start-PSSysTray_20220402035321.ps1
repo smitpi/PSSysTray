@@ -109,13 +109,14 @@ Function Start-PSSysTray {
         [hashtable]$processArguments = @{
             'PassThru'    = $true
             'FilePath'    = $command
+            'WindowStyle' = 'Minimized'
         }
 
         if ( $RunAsAdmin -like 'yes' ) { $processArguments.Add( 'Verb' , 'RunAs' )}
         if ( $Window -contains 'Hidden' ) { $processArguments.Add('WindowStyle' , 'Hidden') }
         if ( $Window -contains 'Normal' ) { $processArguments.Add('WindowStyle' , 'Normal') }
         if ( $Window -contains 'Maximized' ) { $processArguments.Add('WindowStyle' , 'Maximized') }
-        if ( $Window -contains 'Minimized' ) { $processArguments.Add('WindowStyle' , 'Minimized') }
+        if ( $Window -contains 'Maximized' ) { $processArguments.Add('WindowStyle' , 'Minimized') }
 
         if ($mode -eq 'PSFile') { $AddedArguments = "-NoLogo  -NoProfile -ExecutionPolicy Bypass -File `"$arguments`"" }
         if ($mode -eq 'PSCommand') { $AddedArguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -command `"& {$arguments}`"" }
@@ -123,22 +124,14 @@ Function Start-PSSysTray {
 
         if (-not[string]::IsNullOrEmpty( $AddedArguments)) {$processArguments.Add( 'ArgumentList' , [Environment]::ExpandEnvironmentVariables( $AddedArguments)) }
 
-        ShowConsole
-        #Clear-Host
-        Write-Color 'Running the following:' -Color DarkYellow -ShowTime
-        Write-Color 'Command: ', $command -Color Cyan, Green -ShowTime
-        Write-Color 'Arguments: ', $arguments -Color Cyan, Green -ShowTime
-        Write-Color 'Mode: ', $Mode -Color Cyan, Green -ShowTime
-        Write-Color 'Window: ', $Window -Color Cyan, Green -ShowTime
-        Write-Color 'RunAsAdmin: ', $RunAsAdmin -Color Cyan, Green -ShowTime -LinesAfter 2
+
         try {
             Start-Process @processArguments
-            Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
+            [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`n$_") > $null
         }
-        HideConsole
+
     }
     function ShowConsole {
         $PSConsole = [Console.Window]::GetConsoleWindow()

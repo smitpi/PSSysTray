@@ -109,6 +109,7 @@ Function Start-PSSysTray {
         [hashtable]$processArguments = @{
             'PassThru'    = $true
             'FilePath'    = $command
+            'WindowStyle' = 'Minimized'
         }
 
         if ( $RunAsAdmin -like 'yes' ) { $processArguments.Add( 'Verb' , 'RunAs' )}
@@ -123,22 +124,14 @@ Function Start-PSSysTray {
 
         if (-not[string]::IsNullOrEmpty( $AddedArguments)) {$processArguments.Add( 'ArgumentList' , [Environment]::ExpandEnvironmentVariables( $AddedArguments)) }
 
-        ShowConsole
-        #Clear-Host
-        Write-Color 'Running the following:' -Color DarkYellow -ShowTime
-        Write-Color 'Command: ', $command -Color Cyan, Green -ShowTime
-        Write-Color 'Arguments: ', $arguments -Color Cyan, Green -ShowTime
-        Write-Color 'Mode: ', $Mode -Color Cyan, Green -ShowTime
-        Write-Color 'Window: ', $Window -Color Cyan, Green -ShowTime
-        Write-Color 'RunAsAdmin: ', $RunAsAdmin -Color Cyan, Green -ShowTime -LinesAfter 2
+
         try {
             Start-Process @processArguments
-            Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text
             [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
         }
-        HideConsole
+
     }
     function ShowConsole {
         $PSConsole = [Console.Window]::GetConsoleWindow()

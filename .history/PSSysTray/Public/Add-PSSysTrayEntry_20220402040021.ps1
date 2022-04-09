@@ -124,9 +124,9 @@ Function Add-PSSysTrayEntry {
 
         Write-Color 'Choose the window size:' -Color DarkRed -StartTab 1 -LinesBefore 2
         Write-Color '0) ', 'Hidden' -Color Yellow, Green
-        Write-Color '1) ', 'Normal' -Color Yellow, Green
-        Write-Color '2) ', 'Minimized' -Color Yellow, Green
-        Write-Color '3) ', 'Maximized' -Color Yellow, Green
+        Write-Color '3) ', 'Minimized' -Color Yellow, Green
+        Write-Color '2) ', 'Normal' -Color Yellow, Green
+        Write-Color '1) ', 'Maximized' -Color Yellow, Green
         $modechoose = Read-Host 'Answer'
 
         switch ($modechoose) {

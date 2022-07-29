@@ -3,7 +3,7 @@
 ######## Function 1 of 3 ##################
 # Function:         Add-PSSysTrayEntry
 # Module:           PSSysTray
-# ModuleVersion:    0.1.17
+# ModuleVersion:    0.1.19
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/26 15:49:24
@@ -159,7 +159,7 @@ Export-ModuleMember -Function Add-PSSysTrayEntry
 ######## Function 2 of 3 ##################
 # Function:         New-PSSysTrayConfigFile
 # Module:           PSSysTray
-# ModuleVersion:    0.1.17
+# ModuleVersion:    0.1.19
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:39:20
@@ -281,7 +281,7 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ######## Function 3 of 3 ##################
 # Function:         Start-PSSysTray
 # Module:           PSSysTray
-# ModuleVersion:    0.1.17
+# ModuleVersion:    0.1.19
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:40:35

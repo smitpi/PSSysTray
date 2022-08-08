@@ -250,8 +250,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../Add-PSSysTrayEntry/" class="md-nav__link">
-        Add-PSSysTrayEntry
+      <a href="../Edit-PSSysTrayConfig/" class="md-nav__link">
+        Edit-PSSysTrayConfig
       </a>
     </li>
   
@@ -559,12 +559,12 @@
 
 <h1 id="start-pssystray">Start-PSSysTray</h1>
 <h2 id="synopsis">SYNOPSIS</h2>
-<p>This function reads csv config file and creates the gui in your system tray.</p>
+<p>This function reads csv config file and creates the GUI in your system tray.</p>
 <h2 id="syntax">SYNTAX</h2>
-<div class="highlight"><pre><span></span><code>Start-PSSysTray [-PSSysTrayConfigFile] &lt;FileInfo&gt; [&lt;CommonParameters&gt;]
+<div class="highlight"><pre><span></span><code>Start-PSSysTray [[-PSSysTrayConfigFile] &lt;FileInfo&gt;] [&lt;CommonParameters&gt;]
 </code></pre></div>
 <h2 id="description">DESCRIPTION</h2>
-<p>This function reads csv config file and creates the gui in your system tray.</p>
+<p>This function reads csv config file and creates the GUI in your system tray.</p>
 <h2 id="examples">EXAMPLES</h2>
 <h3 id="example-1">EXAMPLE 1</h3>
 <div class="highlight"><pre><span></span><code>Start-PSSysTray -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
@@ -576,7 +576,7 @@
 <span class="nt">Parameter Sets</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(All)</span><span class="w"></span>
 <span class="nt">Aliases</span><span class="p">:</span><span class="w"></span>
 
-<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="nt">Required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="nt">Position</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="nt">Default value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span><span class="w"></span>
 <span class="nt">Accept pipeline input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>

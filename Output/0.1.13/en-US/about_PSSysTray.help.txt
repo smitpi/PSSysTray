@@ -8,9 +8,9 @@ SHORT DESCRIPTION
  
 NOTES
 Functions in this module:
-	 Add-PSSysTrayEntry -- Add an entry in the csv config file.
+	 Edit-PSSysTrayConfig -- Edit the config File
 	 New-PSSysTrayConfigFile -- Creates the needed .csv file in the specified folder.
-	 Start-PSSysTray -- This function reads csv config file and creates the gui in your system tray.
+	 Start-PSSysTray -- This function reads csv config file and creates the GUI in your system tray.
  
 SEE ALSO
 	 https://github.com/smitpi/PSSysTray

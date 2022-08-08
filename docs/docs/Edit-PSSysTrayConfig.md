@@ -5,38 +5,38 @@ online version:
 schema: 2.0.0
 ---
 
-# Add-PSSysTrayEntry
+# Edit-PSSysTrayConfig
 
 ## SYNOPSIS
-Add an entry in the csv config file.
+Edit the config File
 
 ## SYNTAX
 
 ```
-Add-PSSysTrayEntry [-PSSysTrayConfigFile] <FileInfo> [-Execute] [<CommonParameters>]
+Edit-PSSysTrayConfig [[-PSSysTrayConfigFile] <FileInfo>] [-Execute] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Add an entry in the csv config file.
+Edit the config File
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-An Add-PSSysTrayEntry -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
+Edit-PSSysTrayConfig -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 ```
 
 ## PARAMETERS
 
 ### -PSSysTrayConfigFile
-Path to the config file created by New-PSSysTrayConfigFile
+Path to the config file created by New-PSSysTrayConfigFile.
 
 ```yaml
 Type: FileInfo
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
@@ -65,6 +65,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+### System.Object[]
 ## NOTES
 
 ## RELATED LINKS

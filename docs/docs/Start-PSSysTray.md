@@ -8,16 +8,16 @@ schema: 2.0.0
 # Start-PSSysTray
 
 ## SYNOPSIS
-This function reads csv config file and creates the gui in your system tray.
+This function reads csv config file and creates the GUI in your system tray.
 
 ## SYNTAX
 
 ```
-Start-PSSysTray [-PSSysTrayConfigFile] <FileInfo> [<CommonParameters>]
+Start-PSSysTray [[-PSSysTrayConfigFile] <FileInfo>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function reads csv config file and creates the gui in your system tray.
+This function reads csv config file and creates the GUI in your system tray.
 
 ## EXAMPLES
 
@@ -36,7 +36,7 @@ Type: FileInfo
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False

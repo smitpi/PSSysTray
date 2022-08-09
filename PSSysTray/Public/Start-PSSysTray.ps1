@@ -91,7 +91,7 @@ Function Start-PSSysTray {
     [System.Reflection.Assembly]::LoadWithPartialName('presentationframework') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
-    $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
+    # $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
     #endregion
 
     #region Create form
@@ -135,7 +135,7 @@ Function Start-PSSysTray {
             [string]$RunAsAdmin
         )
         [hashtable]$processArguments = @{
-            'PassThru' = $true
+            #'PassThru' = $true
             'FilePath' = $command
         }
 
@@ -158,7 +158,12 @@ Function Start-PSSysTray {
 
         try {
             if ($RunAsUser -like 'LoggedInUser') {Start-Process @processArguments -ErrorAction Stop}
-            else {Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {Start-Process$( $processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) $($_.value)"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop}
+            else {
+                Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {
+                write-host $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String)
+                write-host $RunAsUser
+                Start-Process $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop
+            }
             Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text

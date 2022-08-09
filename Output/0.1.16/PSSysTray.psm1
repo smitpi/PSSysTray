@@ -3,7 +3,7 @@
 ######## Function 1 of 3 ##################
 # Function:         Edit-PSSysTrayConfig
 # Module:           PSSysTray
-# ModuleVersion:    0.1.15
+# ModuleVersion:    0.1.16
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/08/08 21:06:26
@@ -256,7 +256,7 @@ Export-ModuleMember -Function Edit-PSSysTrayConfig
 ######## Function 2 of 3 ##################
 # Function:         New-PSSysTrayConfigFile
 # Module:           PSSysTray
-# ModuleVersion:    0.1.15
+# ModuleVersion:    0.1.16
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:39:20
@@ -381,11 +381,11 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ######## Function 3 of 3 ##################
 # Function:         Start-PSSysTray
 # Module:           PSSysTray
-# ModuleVersion:    0.1.15
+# ModuleVersion:    0.1.16
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:40:35
-# ModifiedOn:       2022/08/09 05:48:20
+# ModifiedOn:       2022/08/09 06:37:29
 # Synopsis:         This function reads csv config file and creates the GUI in your system tray.
 #############################################
  
@@ -439,7 +439,7 @@ Function Start-PSSysTray {
     [System.Reflection.Assembly]::LoadWithPartialName('presentationframework') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
-    $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
+    # $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
     #endregion
 
     #region Create form
@@ -483,7 +483,7 @@ Function Start-PSSysTray {
             [string]$RunAsAdmin
         )
         [hashtable]$processArguments = @{
-            'PassThru' = $true
+            #'PassThru' = $true
             'FilePath' = $command
         }
 
@@ -506,7 +506,12 @@ Function Start-PSSysTray {
 
         try {
             if ($RunAsUser -like 'LoggedInUser') {Start-Process @processArguments -ErrorAction Stop}
-            else {Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {Start-Process$( $processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) $($_.value)"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop}
+            else {
+                Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {
+                write-host $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String)
+                write-host $RunAsUser
+                Start-Process $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop
+            }
             Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text

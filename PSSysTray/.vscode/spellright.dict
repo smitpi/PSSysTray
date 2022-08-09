@@ -2,3 +2,12 @@
 systray
 Systray
 endregion
+<<<<<<< HEAD
+=======
+0b5731b0-afcd-4836-9548-7bfc6de21381
+ps
+PSWriteColor
+9ff9b47f-9cba-4e4a-8b5b-6d7e0acd1670
+asyncwindow
+pid .MainWindowHandle
+>>>>>>> 4aabc0a1f3f52e20a71dbddb19ba785740e42a88

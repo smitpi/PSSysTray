@@ -162,11 +162,7 @@ Function Start-PSSysTray {
                 Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {
                 write-host $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String)
                 write-host $RunAsUser
-<<<<<<< HEAD
                 Start-Process $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Hidden -ErrorAction Stop
-=======
-                Start-Process $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop
->>>>>>> 4aabc0a1f3f52e20a71dbddb19ba785740e42a88
             }
             Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {

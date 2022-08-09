@@ -3,11 +3,11 @@
 ######## Function 1 of 3 ##################
 # Function:         Edit-PSSysTrayConfig
 # Module:           PSSysTray
-# ModuleVersion:    0.1.14
+# ModuleVersion:    0.1.15
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/08/08 21:06:26
-# ModifiedOn:       2022/08/09 00:20:05
+# ModifiedOn:       2022/08/09 05:49:38
 # Synopsis:         Edit the config File
 #############################################
  
@@ -129,6 +129,14 @@ Function Edit-PSSysTrayConfig {
 
             }
 
+            Write-Color 'Run As another User:' -Color DarkRed -StartTab 1 -LinesBefore 2
+            Write-Color '0) ', 'Yes' -Color Yellow, Green
+            Write-Color '1) ', 'No' -Color Yellow, Green
+            $modechoose = Read-Host 'Answer'
+            switch ($modechoose) {
+                '0' {$RunAsUser = (get-variable (read-host "PSCredential Variable Name")).Name}
+                '1' {$RunAsUser  = 'LoggedInUser'}
+            }
             Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
             Write-Color '0) ', 'Yes' -Color Yellow, Green
             Write-Color '1) ', 'No' -Color Yellow, Green
@@ -137,6 +145,7 @@ Function Edit-PSSysTrayConfig {
                 '0' {$RunAs = 'Yes'}
                 '1' {$RunAs = 'No'}
             }
+
             if ($mainmenu -in $config.mainmenu) {
                 $count = ($config.mainmenu | Where-Object {$_ -like $mainmenu}).count
                 $config.Insert(($config.MainMenu.IndexOf("$mainmenu") + $count), [PSCustomObject]@{
@@ -146,6 +155,7 @@ Function Edit-PSSysTrayConfig {
                         Arguments  = $cmd.arguments
                         Mode       = $cmd.mode
                         Window     = $Window
+                        RunAsUser  = $RunAsUser
                         RunAsAdmin = $RunAs
                     })
             } else {
@@ -246,11 +256,11 @@ Export-ModuleMember -Function Edit-PSSysTrayConfig
 ######## Function 2 of 3 ##################
 # Function:         New-PSSysTrayConfigFile
 # Module:           PSSysTray
-# ModuleVersion:    0.1.14
+# ModuleVersion:    0.1.15
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:39:20
-# ModifiedOn:       2022/03/27 20:15:35
+# ModifiedOn:       2022/08/09 05:49:14
 # Synopsis:         Creates the needed .csv file in the specified folder.
 #############################################
  
@@ -265,7 +275,7 @@ Creates the needed .csv file in the specified folder.
 Path to where the config file will be saved.
 
 .PARAMETER CreateShortcut
-Create a shortcut to a .ps1 file that will launch the gui.
+Create a shortcut to a .ps1 file that will launch the GUI.
 
 .EXAMPLE
 New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
@@ -280,9 +290,9 @@ Function New-PSSysTrayConfigFile {
 		[switch]$CreateShortcut = $false
 	)
 	$notes = "## Notes:`n"
-	$notes += "## Posible Entries:`n"
+	$notes += "## Possible Entries:`n"
 	$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
-	$notes += "## `t`tMode: PSFile(Powershell .ps1 file), PSCommand (Powershell Command), Other (All other executables)`n"
+	$notes += "## `t`tMode: PSFile(PowerShell .ps1 file), PSCommand (PowerShell Command), Other (All other executables)`n"
 	$notes += "## `t`tRunAsAdmin: Yes,No`n"
 	$notes += "##`n"
 
@@ -295,6 +305,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'C:\temp\script.ps1'
 		Mode       = 'PSFile'
 		Window     = 'hidden'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'no'
 	}
 	$export += [PSCustomObject]@{
@@ -304,6 +315,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'get-command'
 		Mode       = 'PSCommand'
 		Window     = 'Maximized'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'yes'
 	}
 	$export += [PSCustomObject]@{
@@ -313,6 +325,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'c:\Temp'
 		Mode       = 'Other'
 		Window     = 'Normal'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'yes'
 	}
 	if ($pscmdlet.ShouldProcess('Target', 'Operation')) {
@@ -368,11 +381,11 @@ Export-ModuleMember -Function New-PSSysTrayConfigFile
 ######## Function 3 of 3 ##################
 # Function:         Start-PSSysTray
 # Module:           PSSysTray
-# ModuleVersion:    0.1.14
+# ModuleVersion:    0.1.15
 # Author:           Pierre Smit
 # Company:          HTPCZA Tech
 # CreatedOn:        2022/03/22 11:40:35
-# ModifiedOn:       2022/08/09 03:18:59
+# ModifiedOn:       2022/08/09 05:48:20
 # Synopsis:         This function reads csv config file and creates the GUI in your system tray.
 #############################################
  
@@ -407,6 +420,11 @@ Function Start-PSSysTray {
         $PSSysTrayConfigFile = Get-Item $FileBrowser.FileName
         $Script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
     }
+    #region Checking for credentials
+    $config.RunAsUser | Where-Object {$_ -notlike 'LoggedInUser'} | ForEach-Object {
+        if (-not(Get-Variable $_) -and -not((Get-Variable $_).Value.GetType().Name -notlike 'PSCredential')) {New-Variable -Name $_ -Value (Get-Credential)}
+    }
+
     #endregion
     #region load assemblies v
     Add-Type -Name Window -Namespace Console -MemberDefinition '
@@ -422,10 +440,6 @@ Function Start-PSSysTray {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
     $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
-
-    
-    
-    
     #endregion
 
     #region Create form
@@ -453,19 +467,19 @@ Function Start-PSSysTray {
     $contextmenu = New-Object System.Windows.Forms.ContextMenuStrip
     #endregion
     #region functions
-
-    function ShowConsole {
-        $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 5)
-    }
-    function HideConsole {
-        $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
-    }
+    # function ShowConsole {
+    #     $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 5)
+    # }
+    # function HideConsole {
+    #     $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
+    # }
     Function Invoke-Action {
         Param (
             [string]$command,
             [string]$arguments,
             [string]$mode,
             [string]$Window,
+            [string]$RunAsUser,
             [string]$RunAsAdmin
         )
         [hashtable]$processArguments = @{
@@ -491,7 +505,8 @@ Function Start-PSSysTray {
         $processArguments.GetEnumerator().name | ForEach-Object {Write-Color ('{0,-15}:' -f "$($_)"), ('{0}' -f "$($processArguments.$($_))") -ForegroundColor Cyan, Green -ShowTime}
 
         try {
-            Start-Process @processArguments
+            if ($RunAsUser -like 'LoggedInUser') {Start-Process @processArguments -ErrorAction Stop}
+            else {Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {Start-Process$( $processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) $($_.value)"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop}
             Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text
@@ -550,7 +565,7 @@ Function Start-PSSysTray {
         $tmpmenu = NMainMenu -Text $main
         $record = $config | Where-Object { $_.Mainmenu -like $main }
         foreach ($rec in $record) {
-            [scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -Window `"$($rec.Window)`" -RunAsAdmin `"$($rec.RunAsAdmin)`"" )
+            [scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -Window `"$($rec.Window)`" -RunAsUser `"$($rec.RunAsUser)`" -RunAsAdmin `"$($rec.RunAsAdmin)`"" )
             NMenuItem -Text $rec.Name -clickAction $clickAction -command $rec.command -MainMenu $tmpmenu
         }
     }
@@ -584,17 +599,17 @@ Function Start-PSSysTray {
     $EditConfigMenu.DropDownItems.Add($Add_Entry)
     #endregion
     #region add Menu_EnableLog button
-    $Menu_EnableLog = New-Object System.Windows.Forms.ToolStripMenuItem
-    $Menu_EnableLog.Image = $Edit_Icon
-    $Menu_EnableLog.Text = 'Enable Logging'
-    $Menu_EnableLog.add_Click( { EnableLogging })
+    # $Menu_EnableLog = New-Object System.Windows.Forms.ToolStripMenuItem
+    # $Menu_EnableLog.Image = $Edit_Icon
+    # $Menu_EnableLog.Text = 'Enable Logging'
+    # $Menu_EnableLog.add_Click( { EnableLogging })
     #$EditConfigMenu.DropDownItems.Add($Menu_EnableLog)
     #endregion
     #region add Menu_DisableLog button
-    $Menu_DisableLog = New-Object System.Windows.Forms.ToolStripMenuItem
-    $Menu_DisableLog.Image = $Edit_Icon
-    $Menu_DisableLog.Text = 'Disable Logging'
-    $Menu_DisableLog.add_Click( { DisableLogging })
+    # $Menu_DisableLog = New-Object System.Windows.Forms.ToolStripMenuItem
+    # $Menu_DisableLog.Image = $Edit_Icon
+    # $Menu_DisableLog.Text = 'Disable Logging'
+    # $Menu_DisableLog.add_Click( { DisableLogging })
     #$EditConfigMenu.DropDownItems.Add($Menu_DisableLog)
     #endregion
     #region add Menu_DisableLog button

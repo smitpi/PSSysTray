@@ -72,6 +72,11 @@ Function Start-PSSysTray {
         $PSSysTrayConfigFile = Get-Item $FileBrowser.FileName
         $Script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
     }
+    #region Checking for credentials
+    $config.RunAsUser | Where-Object {$_ -notlike 'LoggedInUser'} | ForEach-Object {
+        if (-not(Get-Variable $_) -and -not((Get-Variable $_).Value.GetType().Name -notlike 'PSCredential')) {New-Variable -Name $_ -Value (Get-Credential)}
+    }
+
     #endregion
     #region load assemblies v
     Add-Type -Name Window -Namespace Console -MemberDefinition '
@@ -87,10 +92,6 @@ Function Start-PSSysTray {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
     $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
-
-    
-    
-    
     #endregion
 
     #region Create form
@@ -118,19 +119,19 @@ Function Start-PSSysTray {
     $contextmenu = New-Object System.Windows.Forms.ContextMenuStrip
     #endregion
     #region functions
-
-    function ShowConsole {
-        $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 5)
-    }
-    function HideConsole {
-        $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
-    }
+    # function ShowConsole {
+    #     $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 5)
+    # }
+    # function HideConsole {
+    #     $null = $asyncwindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
+    # }
     Function Invoke-Action {
         Param (
             [string]$command,
             [string]$arguments,
             [string]$mode,
             [string]$Window,
+            [string]$RunAsUser,
             [string]$RunAsAdmin
         )
         [hashtable]$processArguments = @{
@@ -156,7 +157,8 @@ Function Start-PSSysTray {
         $processArguments.GetEnumerator().name | ForEach-Object {Write-Color ('{0,-15}:' -f "$($_)"), ('{0}' -f "$($processArguments.$($_))") -ForegroundColor Cyan, Green -ShowTime}
 
         try {
-            Start-Process @processArguments
+            if ($RunAsUser -like 'LoggedInUser') {Start-Process @processArguments -ErrorAction Stop}
+            else {Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {Start-Process$( $processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) $($_.value)"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Normal -ErrorAction Stop}
             Write-Color 'Process Completed' -ShowTime -Color DarkYellow
         } catch {
             $Text = $This.Text
@@ -215,7 +217,7 @@ Function Start-PSSysTray {
         $tmpmenu = NMainMenu -Text $main
         $record = $config | Where-Object { $_.Mainmenu -like $main }
         foreach ($rec in $record) {
-            [scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -Window `"$($rec.Window)`" -RunAsAdmin `"$($rec.RunAsAdmin)`"" )
+            [scriptblock]$clickAction = [scriptblock]::Create( "Invoke-Action -control `$_ -name `"$($rec.Name)`" -command `"$($rec.command)`" -arguments `"$(($rec|Select-Object -ExpandProperty arguments -ErrorAction SilentlyContinue) -replace '"' , '`"`"')`" -mode $($rec.Mode) -Window `"$($rec.Window)`" -RunAsUser `"$($rec.RunAsUser)`" -RunAsAdmin `"$($rec.RunAsAdmin)`"" )
             NMenuItem -Text $rec.Name -clickAction $clickAction -command $rec.command -MainMenu $tmpmenu
         }
     }
@@ -249,17 +251,17 @@ Function Start-PSSysTray {
     $EditConfigMenu.DropDownItems.Add($Add_Entry)
     #endregion
     #region add Menu_EnableLog button
-    $Menu_EnableLog = New-Object System.Windows.Forms.ToolStripMenuItem
-    $Menu_EnableLog.Image = $Edit_Icon
-    $Menu_EnableLog.Text = 'Enable Logging'
-    $Menu_EnableLog.add_Click( { EnableLogging })
+    # $Menu_EnableLog = New-Object System.Windows.Forms.ToolStripMenuItem
+    # $Menu_EnableLog.Image = $Edit_Icon
+    # $Menu_EnableLog.Text = 'Enable Logging'
+    # $Menu_EnableLog.add_Click( { EnableLogging })
     #$EditConfigMenu.DropDownItems.Add($Menu_EnableLog)
     #endregion
     #region add Menu_DisableLog button
-    $Menu_DisableLog = New-Object System.Windows.Forms.ToolStripMenuItem
-    $Menu_DisableLog.Image = $Edit_Icon
-    $Menu_DisableLog.Text = 'Disable Logging'
-    $Menu_DisableLog.add_Click( { DisableLogging })
+    # $Menu_DisableLog = New-Object System.Windows.Forms.ToolStripMenuItem
+    # $Menu_DisableLog.Image = $Edit_Icon
+    # $Menu_DisableLog.Text = 'Disable Logging'
+    # $Menu_DisableLog.add_Click( { DisableLogging })
     #$EditConfigMenu.DropDownItems.Add($Menu_DisableLog)
     #endregion
     #region add Menu_DisableLog button

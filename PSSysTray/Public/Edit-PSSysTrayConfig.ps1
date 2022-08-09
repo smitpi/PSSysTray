@@ -160,6 +160,14 @@ Function Edit-PSSysTrayConfig {
 
             }
 
+            Write-Color 'Run As another User:' -Color DarkRed -StartTab 1 -LinesBefore 2
+            Write-Color '0) ', 'Yes' -Color Yellow, Green
+            Write-Color '1) ', 'No' -Color Yellow, Green
+            $modechoose = Read-Host 'Answer'
+            switch ($modechoose) {
+                '0' {$RunAsUser = (get-variable (read-host "PSCredential Variable Name")).Name}
+                '1' {$RunAsUser  = 'LoggedInUser'}
+            }
             Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2
             Write-Color '0) ', 'Yes' -Color Yellow, Green
             Write-Color '1) ', 'No' -Color Yellow, Green
@@ -168,6 +176,7 @@ Function Edit-PSSysTrayConfig {
                 '0' {$RunAs = 'Yes'}
                 '1' {$RunAs = 'No'}
             }
+
             if ($mainmenu -in $config.mainmenu) {
                 $count = ($config.mainmenu | Where-Object {$_ -like $mainmenu}).count
                 $config.Insert(($config.MainMenu.IndexOf("$mainmenu") + $count), [PSCustomObject]@{
@@ -177,6 +186,7 @@ Function Edit-PSSysTrayConfig {
                         Arguments  = $cmd.arguments
                         Mode       = $cmd.mode
                         Window     = $Window
+                        RunAsUser  = $RunAsUser
                         RunAsAdmin = $RunAs
                     })
             } else {

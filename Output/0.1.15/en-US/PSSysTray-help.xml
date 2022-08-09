@@ -123,7 +123,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>CreateShortcut</maml:name>
           <maml:description>
-            <maml:para>Create a shortcut to a .ps1 file that will launch the gui.</maml:para>
+            <maml:para>Create a shortcut to a .ps1 file that will launch the GUI.</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -171,7 +171,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>CreateShortcut</maml:name>
         <maml:description>
-          <maml:para>Create a shortcut to a .ps1 file that will launch the gui.</maml:para>
+          <maml:para>Create a shortcut to a .ps1 file that will launch the GUI.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>

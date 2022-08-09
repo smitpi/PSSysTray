@@ -50,7 +50,7 @@ Creates the needed .csv file in the specified folder.
 Path to where the config file will be saved.
 
 .PARAMETER CreateShortcut
-Create a shortcut to a .ps1 file that will launch the gui.
+Create a shortcut to a .ps1 file that will launch the GUI.
 
 .EXAMPLE
 New-PSSysTrayConfigFile -ConfigPath C:\temp -CreateShortcut
@@ -65,9 +65,9 @@ Function New-PSSysTrayConfigFile {
 		[switch]$CreateShortcut = $false
 	)
 	$notes = "## Notes:`n"
-	$notes += "## Posible Entries:`n"
+	$notes += "## Possible Entries:`n"
 	$notes += "## `t`tWindow: Hidden,Maximized,Normal,Minimized`n"
-	$notes += "## `t`tMode: PSFile(Powershell .ps1 file), PSCommand (Powershell Command), Other (All other executables)`n"
+	$notes += "## `t`tMode: PSFile(PowerShell .ps1 file), PSCommand (PowerShell Command), Other (All other executables)`n"
 	$notes += "## `t`tRunAsAdmin: Yes,No`n"
 	$notes += "##`n"
 
@@ -80,6 +80,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'C:\temp\script.ps1'
 		Mode       = 'PSFile'
 		Window     = 'hidden'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'no'
 	}
 	$export += [PSCustomObject]@{
@@ -89,6 +90,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'get-command'
 		Mode       = 'PSCommand'
 		Window     = 'Maximized'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'yes'
 	}
 	$export += [PSCustomObject]@{
@@ -98,6 +100,7 @@ Function New-PSSysTrayConfigFile {
 		Arguments  = 'c:\Temp'
 		Mode       = 'Other'
 		Window     = 'Normal'
+		RunAsUser  = 'LoggedInUser'
 		RunAsAdmin = 'yes'
 	}
 	if ($pscmdlet.ShouldProcess('Target', 'Operation')) {

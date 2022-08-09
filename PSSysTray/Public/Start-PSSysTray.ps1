@@ -86,7 +86,7 @@ Function Start-PSSysTray {
     [System.Reflection.Assembly]::LoadWithPartialName('presentationframework') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null
     [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | Out-Null
-    $asyncwindow = Add-Type -MemberDefinition $windowcode -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
+    $asyncwindow = Add-Type -MemberDefinition $windowcode -Name Win32ShowWindowAsync -Namespace Win32Functions -PassThru
 
     
     
@@ -102,11 +102,11 @@ Function Start-PSSysTray {
     $icon = [System.Drawing.Icon]::ExtractAssociatedIcon($icopath.FullName)
 
     $Exit_Icon_Path = (Join-Path $module.ModuleBase '\Private\exit.png') | Get-Item
-    $Exit_Icon =[System.Drawing.Bitmap]::FromFile($Exit_Icon_Path.FullName)
+    $Exit_Icon = [System.Drawing.Bitmap]::FromFile($Exit_Icon_Path.FullName)
     $Edit_Icon_Path = (Join-Path $module.ModuleBase '\Private\edit.png') | Get-Item
-    $Edit_Icon =[System.Drawing.Bitmap]::FromFile($Edit_Icon_Path.FullName)
+    $Edit_Icon = [System.Drawing.Bitmap]::FromFile($Edit_Icon_Path.FullName)
     $Menu_Icon_Path = (Join-Path $module.ModuleBase '\Private\menu.png') | Get-Item
-    $Menu_Icon =[System.Drawing.Bitmap]::FromFile($Menu_Icon_Path.FullName)
+    $Menu_Icon = [System.Drawing.Bitmap]::FromFile($Menu_Icon_Path.FullName)
 
     # Create object for the systray
     $Systray_Tool_Icon = New-Object System.Windows.Forms.NotifyIcon
@@ -177,7 +177,7 @@ Function Start-PSSysTray {
 
         try {
             $commanditem = Get-Item $command -ErrorAction Stop
-        } catch {$commanditem = (get-item (Get-Command $command).Source)}
+        } catch {$commanditem = (Get-Item (Get-Command $command).Source)}
 
         $tmpicon = [System.Drawing.Icon]::ExtractAssociatedIcon($commanditem.FullName)
         $MenuItem.Image = [System.Drawing.Bitmap]$tmpicon.ToBitmap()
@@ -241,7 +241,7 @@ Function Start-PSSysTray {
     $Add_Entry.Text = 'Edit Config'
     $Add_Entry.add_Click( {
             ShowConsole
-            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {edit-PSSysTrayEntry -PSSysTrayConfigFile $($PSSysTrayConfigFile) -execute }"" -wait"
+            Start-Process -FilePath 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe' -ArgumentList "-NoLogo -NoProfile  -ExecutionPolicy bypass -command ""& {Edit-PSSysTrayConfig -PSSysTrayConfigFile $($PSSysTrayConfigFile) -execute }"" -wait"
             $Systray_Tool_Icon.Visible = $false
             Stop-Process $pid
             HideConsole
@@ -253,14 +253,14 @@ Function Start-PSSysTray {
     $Menu_EnableLog.Image = $Edit_Icon
     $Menu_EnableLog.Text = 'Enable Logging'
     $Menu_EnableLog.add_Click( { EnableLogging })
-    $EditConfigMenu.DropDownItems.Add($Menu_EnableLog)
+    #$EditConfigMenu.DropDownItems.Add($Menu_EnableLog)
     #endregion
     #region add Menu_DisableLog button
     $Menu_DisableLog = New-Object System.Windows.Forms.ToolStripMenuItem
     $Menu_DisableLog.Image = $Edit_Icon
     $Menu_DisableLog.Text = 'Disable Logging'
     $Menu_DisableLog.add_Click( { DisableLogging })
-    $EditConfigMenu.DropDownItems.Add($Menu_DisableLog)
+    #$EditConfigMenu.DropDownItems.Add($Menu_DisableLog)
     #endregion
     #region add Menu_DisableLog button
     $Menu_OpenConfig = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -275,8 +275,8 @@ Function Start-PSSysTray {
     $Menu_Exit.Text = 'Exit'
     $Menu_Exit.add_Click( {
             $Systray_Tool_Icon.Visible = $false
-             [void][System.Windows.Forms.Application]::Exit($appContext)
-            #Stop-Process $pid
+            [void][System.Windows.Forms.Application]::Exit($appContext)
+            Stop-Process $pid
         })
     $contextmenu.Items.Add($Menu_Exit)
     #endregion

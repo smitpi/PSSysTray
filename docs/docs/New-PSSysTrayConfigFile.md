@@ -45,7 +45,7 @@ Accept wildcard characters: False
 ```
 
 ### -CreateShortcut
-Create a shortcut to a .ps1 file that will launch the gui.
+Create a shortcut to a .ps1 file that will launch the GUI.
 
 ```yaml
 Type: SwitchParameter

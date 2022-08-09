@@ -5,31 +5,31 @@ online version:
 schema: 2.0.0
 ---
 
-# Start-PSSysTray
+# Edit-PSSysTrayConfig
 
 ## SYNOPSIS
-This function reads csv config file and creates the GUI in your system tray.
+Edit the config File
 
 ## SYNTAX
 
 ```
-Start-PSSysTray [[-PSSysTrayConfigFile] <FileInfo>] [<CommonParameters>]
+Edit-PSSysTrayConfig [[-PSSysTrayConfigFile] <FileInfo>] [-Execute] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function reads csv config file and creates the GUI in your system tray.
+Edit the config File
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 ```
-Start-PSSysTray -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
+Edit-PSSysTrayConfig -PSSysTrayConfigFile C:\temp\PSSysTrayConfig.csv
 ```
 
 ## PARAMETERS
 
 ### -PSSysTrayConfigFile
-Path to the config file created by New-PSSysTrayConfigFile
+Path to the config file created by New-PSSysTrayConfigFile.
 
 ```yaml
 Type: FileInfo
@@ -43,6 +43,21 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Execute
+Start the tool after adding the configuration.
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### CommonParameters
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
@@ -50,6 +65,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
+### System.Object[]
 ## NOTES
 
 ## RELATED LINKS

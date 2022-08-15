@@ -157,7 +157,6 @@ Function Edit-PSSysTrayConfig {
                 '1' {$Window = 'Normal'}
                 '2' {$Window = 'Minimized'}
                 '3' {$Window = 'Maximized'}
-
             }
 
             Write-Color 'Run As another User:' -Color DarkRed -StartTab 1 -LinesBefore 2
@@ -165,7 +164,7 @@ Function Edit-PSSysTrayConfig {
             Write-Color '1) ', 'No' -Color Yellow, Green
             $modechoose = Read-Host 'Answer'
             switch ($modechoose) {
-                '0' {$RunAsUser = (get-variable (read-host "PSCredential Variable Name")).Name}
+                '0' {$RunAsUser = Read-Host 'PSCredential Variable Name '}
                 '1' {$RunAsUser  = 'LoggedInUser'}
             }
             Write-Color 'Run As Admin:' -Color DarkRed -StartTab 1 -LinesBefore 2

@@ -73,8 +73,15 @@ Function Start-PSSysTray {
         $Script:config = Get-Content $PSSysTrayConfigFile | Where-Object {$_ -notlike '##*'} | ConvertFrom-Csv -Delimiter '~'
     }
     #region Checking for credentials
-    $config.RunAsUser | Where-Object {$_ -notlike 'LoggedInUser'} | ForEach-Object {
-        if (-not(Get-Variable $_) -and -not((Get-Variable $_).Value.GetType().Name -notlike 'PSCredential')) {New-Variable -Name $_ -Value (Get-Credential)}
+    $users = $config.RunAsUser | Where-Object {$_ -notlike 'LoggedInUser'}
+    foreach ($User in ($users | Sort-Object -Unique)) {
+        $exists = Get-Variable -Name $User -ErrorAction SilentlyContinue
+        $Vartype = (Get-Variable -Name $User -ErrorAction SilentlyContinue).Value.GetType().Name
+        if (-not($exists) -or $Vartype -notlike 'PSCredential') {
+            $tmp = Get-Credential -Message "Username and password for $($User)"
+            New-Variable -Name $User -Value $tmp -Option AllScope -Visibility Public -Scope global -Force
+            Write-Color '[PSCredential]: ', "$($User): ", 'Complete' -Color Yellow, Cyan, Green
+        } else {Write-Color '[PSCredential]: ', "$($User): ", 'Already Created' -Color Yellow, Cyan, DarkGray}
     }
 
     #endregion
@@ -135,7 +142,7 @@ Function Start-PSSysTray {
             [string]$RunAsAdmin
         )
         [hashtable]$processArguments = @{
-            #'PassThru' = $true
+            #'PassThru' = $($true)
             'FilePath' = $command
         }
 
@@ -146,28 +153,39 @@ Function Start-PSSysTray {
         if ( $Window -contains 'Minimized') { $processArguments.Add('WindowStyle' , 'Minimized') }
 
         if ($mode -eq 'PSFile') { $AddedArguments = "-NoLogo  -NoProfile -ExecutionPolicy Bypass -File `"$arguments`"" }
-        if ($mode -eq 'PSCommand') { $AddedArguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -command `"& {$arguments}`"" }
+        if ($mode -eq 'PSCommand') { $AddedArguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -command ""(& {$arguments})""" }
         if (-not($mode -eq 'Other') -and $LoggingEnabled) {$AddedArguments = '-NoExit ' + $AddedArguments}
-
         if ($mode -eq 'Other') { $AddedArguments = $arguments}
-
         if (-not[string]::IsNullOrEmpty( $AddedArguments)) {$processArguments.Add( 'ArgumentList' , [Environment]::ExpandEnvironmentVariables( $AddedArguments)) }
-
-        Write-Color 'Running the following:' -Color DarkYellow -ShowTime
-        $processArguments.GetEnumerator().name | ForEach-Object {Write-Color ('{0,-15}:' -f "$($_)"), ('{0}' -f "$($processArguments.$($_))") -ForegroundColor Cyan, Green -ShowTime}
-
-        try {
-            if ($RunAsUser -like 'LoggedInUser') {Start-Process @processArguments -ErrorAction Stop}
-            else {
-                Start-Process -FilePath powershell.exe -ArgumentList " -noprofile -command & {
-                write-host $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String)
-                write-host $RunAsUser
-                Start-Process $($processArguments.GetEnumerator() | ForEach-Object {" -$($_.name) '$($_.value)'"} | Join-String) }" -Credential (Get-Variable $RunAsUser).Value -WindowStyle Hidden -ErrorAction Stop
+        
+        if ($RunAsUser -like 'LoggedInUser') {
+            try {
+                Write-Color 'Running the following ', 'as LoggonUser:' -Color DarkYellow, DarkCyan -ShowTime
+                $processArguments.GetEnumerator().name | ForEach-Object {Write-Color ('{0,-15}:' -f "$($_)"), ('{0}' -f "$($processArguments.$($_))") -ForegroundColor Cyan, Green -ShowTime}
+                Start-Process @processArguments -ErrorAction Stop
+            } catch {
+                $Text = $This.Text
+                [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
             }
-            Write-Color 'Process Completed' -ShowTime -Color DarkYellow
-        } catch {
-            $Text = $This.Text
-            [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
+        } else {
+            try {
+                $ModProcessArg = $processArguments
+                $ModProcessArg.ArgumentList = "'" + $($ModProcessArg.ArgumentList) + "'"
+                $params = "Start-Process $([string]::Join(' ', ($ModProcessArg.GetEnumerator() | ForEach-Object {"-$($_.Key) $($_.Value)"})))"
+                $BigHash = @{
+                    'FilePath'     = 'powershell.exe'
+                    'ArgumentList' = "-NoLogo -NoProfile -ExecutionPolicy Bypass -command ""(& {$params})"""
+                    'WindowStyle'  = 'Hidden'
+                    'Credential'   = (Get-Variable -Name $RunAsUser -ValueOnly)
+                }
+                if ($LoggingEnabled) {$BigHash.ArgumentList = '-NoExit ' + $BigHash.ArgumentList}
+                Write-Color 'Running the following ', "as $((Get-Variable -Name $RunAsUser -ValueOnly).username):" -Color DarkYellow, DarkCyan -ShowTime
+                $BigHash.GetEnumerator().name | ForEach-Object {Write-Color ('{0,-15}:' -f "$($_)"), ('{0}' -f "$($BigHash.$($_))") -ForegroundColor Cyan, Green -ShowTime}
+                Start-Process @BigHash
+            } catch {
+                $Text = $This.Text
+                [System.Windows.Forms.MessageBox]::Show("Failed to launch $Text`n`nMessage:$($_.Exception.Message)`nItem:$($_.Exception.ItemName)") > $null
+            }
         }
     }
     function NMenuItem {

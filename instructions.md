@@ -8,9 +8,14 @@ Creates a System Tray Menu from a csv file to launch any PowerShell Command or f
 ```
 Install-Module -Name PSSysTray -Verbose
 ```
-- or from GitHub [GitHub Repo](https://github.com/smitpi/PSSysTray)
+- or run this script to install from GitHub [GitHub Repo](https://github.com/smitpi/PSSysTray)
 ```
-git clone https://github.com/smitpi/PSSysTray (Join-Path (get-item (Join-Path (Get-Item $profile).Directory 'Modules')).FullName -ChildPath PSSysTray)
+$CurrentLocation = Get-Item .
+$ModuleDestination = (Join-Path (Get-Item (Join-Path (Get-Item $profile).Directory 'Modules')).FullName -ChildPath PSSysTray)
+git clone --depth 1 https://github.com/smitpi/PSSysTray $ModuleDestination 2>&1 | Write-Host -ForegroundColor Yellow
+Set-Location $ModuleDestination
+git filter-branch --prune-empty --subdirectory-filter Output HEAD 2>&1 | Write-Host -ForegroundColor Yellow
+Set-Location $CurrentLocation
 ```
 - Then import the module into your session
 ```
